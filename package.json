@@ -1,0 +1,25 @@
+{
+  "name": "go-game",
+  "version": "0.1.0",
+  "description": "The game of go.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "go",
+    "game",
+    "board",
+    "strategy",
+    "igo",
+    "baduk",
+    "weiqi"
+  ],
+  "author": "Sam Vaughn",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.15.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1"
+  }
+}
