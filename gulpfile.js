@@ -4,12 +4,13 @@ var gulp = require('gulp');
 var eslint = require('gulp-eslint');
 var browserSync = require('browser-sync');
 var sass = require('gulp-sass');
+var jasmine = require('gulp-jasmine-phantom');
 
-gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function() {
+gulp.task('default', ['html', 'images', 'styles', 'lint', 'tests', 'scripts'], function() {
 	gulp.watch('./*.html', ['html']);
 	gulp.watch('img/**/*.png', ['images']);
 	gulp.watch('sass/**/*.scss', ['styles']);
-	gulp.watch('js/**/*.js', ['lint', 'scripts']);
+	gulp.watch('js/**/*.js', ['lint', 'tests', 'scripts']);
 	browserSync.init({
 		server: './dist'
 	});
@@ -45,4 +46,11 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
 	gulp.src(['js/**/*.js'])
 		.pipe(gulp.dest('./dist/js'));
+});
+
+gulp.task('tests', function() {
+	gulp.src('spec/*.js')
+		.pipe(jasmine({
+			integration: true
+		}));
 });

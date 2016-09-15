@@ -21,6 +21,8 @@
     "browser-sync": "^2.15.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
-    "gulp-sass": "^2.3.2"
+    "gulp-jasmine-phantom": "^3.0.0",
+    "gulp-sass": "^2.3.2",
+    "phantomjs-prebuilt": "^2.1.12"
   }
 }
