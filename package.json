@@ -18,8 +18,10 @@
   "author": "Sam Vaughn",
   "license": "ISC",
   "devDependencies": {
+    "babel-preset-es2015": "^6.14.0",
     "browser-sync": "^2.15.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-eslint": "^3.0.1",
     "gulp-jasmine-phantom": "^3.0.0",
     "gulp-sass": "^2.3.2",

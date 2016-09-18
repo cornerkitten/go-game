@@ -1,16 +1,17 @@
 /*eslint-env node*/
 
-var gulp = require('gulp');
-var eslint = require('gulp-eslint');
-var browserSync = require('browser-sync');
-var sass = require('gulp-sass');
-var jasmine = require('gulp-jasmine-phantom');
+const gulp = require('gulp');
+const eslint = require('gulp-eslint');
+const browserSync = require('browser-sync');
+const sass = require('gulp-sass');
+const jasmine = require('gulp-jasmine-phantom');
+const babel = require('gulp-babel');
 
-gulp.task('default', ['html', 'images', 'styles', 'lint', 'tests', 'scripts'], function() {
+gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function() {
 	gulp.watch('./*.html', ['html']);
 	gulp.watch('img/**/*.png', ['images']);
 	gulp.watch('sass/**/*.scss', ['styles']);
-	gulp.watch('js/**/*.js', ['lint', 'tests', 'scripts']);
+	gulp.watch('js/**/*.js', ['lint', 'scripts']);
 	browserSync.init({
 		server: './dist'
 	});
@@ -45,6 +46,9 @@ gulp.task('lint', function() {
 
 gulp.task('scripts', function() {
 	gulp.src(['js/**/*.js'])
+		.pipe(babel({
+			presets: ['es2015']
+		}))
 		.pipe(gulp.dest('./dist/js'));
 });
 

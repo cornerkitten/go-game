@@ -1,24 +1,31 @@
+/*global SpriteRenderer*/
 /*eslint no-console: "off"*/
 
 var setup = function() {
-	const CANVAS_ID = 'game-board';
+	const CANVAS_ID = 'game';
 	const GAME_BOARD_IMG_SRC = 'img/game-board.png';
+	const STONE_IMG_SRC = 'img/go-stone-black.png';
 
-	console.info('SETUP()');
-
-	var gameBoard = document.getElementById(CANVAS_ID);
-	var ctx = gameBoard.getContext('2d');
-	var boardImage = new Image();
-
-	gameBoard.width = parseInt(window.getComputedStyle(gameBoard).width);
-	gameBoard.height = parseInt(window.getComputedStyle(gameBoard).height);
-
-	boardImage.onload = function() {
-		console.info('IMAGE LOADED');
-		ctx.drawImage(boardImage, 0, 0, gameBoard.width, gameBoard.height);
-	};
+	var gameCanvas = document.getElementById(CANVAS_ID);
+	gameCanvas.width = parseInt(window.getComputedStyle(gameCanvas).width);
+	gameCanvas.height = parseInt(window.getComputedStyle(gameCanvas).height);
+	var ctx = gameCanvas.getContext('2d');
+	var spriteRenderer = new SpriteRenderer(ctx);
 	
-	boardImage.src = GAME_BOARD_IMG_SRC;
+	spriteRenderer.preloadSprite(GAME_BOARD_IMG_SRC, () => {
+		spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
+
+		spriteRenderer.preloadSprite(STONE_IMG_SRC, () => {
+			spriteRenderer.render(STONE_IMG_SRC, {x:16, y:16});
+		});
+	});
+
+	gameCanvas.onmousemove = (e) => {
+		console.info(e);
+		spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
+		spriteRenderer.render(STONE_IMG_SRC, {x:e.offsetX-43, y:e.offsetY-43});
+	};
 };
 
 window.onload = setup;
+
