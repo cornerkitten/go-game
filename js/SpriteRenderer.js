@@ -1,3 +1,4 @@
+/*eslint no-console: "off"*/
 
 function SpriteRenderer(ctx) {
 	this.ctx = ctx;
@@ -38,4 +39,28 @@ SpriteRenderer.prototype.drawGrid = function(size, cellSize, offset, color) {
 		this.ctx.lineTo(offset + (size - 1) * cellSize,	offset + i * cellSize);
 	}
 	this.ctx.stroke();
+};
+
+SpriteRenderer.prototype.drawPlayedStones = function(boardModel) {
+	const BLACK_STONE_IMG_SRC = 'img/go-stone-black.png';
+	const WHITE_STONE_IMG_SRC = 'img/go-stone-white.png';
+
+	boardModel.forEach( (row, rowIndex) => {
+		row.forEach( (placedStone, colIndex) => {
+			let sprite;
+			if (placedStone === 'w') {
+				sprite = WHITE_STONE_IMG_SRC;
+			} else if (placedStone === 'b') {
+				sprite = BLACK_STONE_IMG_SRC;
+			} else {
+				return;
+			}
+
+			let pos = {x:colIndex*64, y:rowIndex*64};
+			pos.x -= 43 - 32; // half of stone image width - outer margin offset
+			pos.y -= 43 - 32; // half of stone image width - outer margin offset
+
+			this.render(sprite, pos);
+		}, this);
+	}, this);
 };

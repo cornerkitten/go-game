@@ -4,7 +4,19 @@
 function setup() {
 	const CANVAS_ID = 'game';
 	const GAME_BOARD_IMG_SRC = 'img/go-board-wood-576px.png';
-	const STONE_IMG_SRC = 'img/go-stone-black.png';
+	const BLACK_STONE_IMG_SRC = 'img/go-stone-black.png';
+	const WHITE_STONE_IMG_SRC = 'img/go-stone-white.png';
+	const BOARD_SIZE = 9;
+
+	let boardModel = new Array(BOARD_SIZE);
+	for (let i = 0; i < BOARD_SIZE; i++) {
+		boardModel[i] = new Array(BOARD_SIZE);
+	}
+	boardModel[6][6] = 'b';
+	boardModel[3][2] = 'w';
+	boardModel[4][2] = 'w';
+	boardModel[2][2] = 'b';
+	boardModel[5][2] = 'b';
 
 	var gameCanvas = document.getElementById(CANVAS_ID);
 	gameCanvas.width = parseInt(window.getComputedStyle(gameCanvas).width);
@@ -15,9 +27,11 @@ function setup() {
 	spriteRenderer.preloadSprite(GAME_BOARD_IMG_SRC, () => {
 		spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
 
-		spriteRenderer.preloadSprite(STONE_IMG_SRC, () => {
-			
-			spriteRenderer.drawGrid(9, 64, 32, 'black');
+		spriteRenderer.preloadSprite(WHITE_STONE_IMG_SRC, () => {
+			spriteRenderer.preloadSprite(BLACK_STONE_IMG_SRC, () => {
+				
+				spriteRenderer.drawGrid(9, 64, 32, 'black');
+			});
 		});
 	});
 
@@ -25,12 +39,11 @@ function setup() {
 		console.info(e);
 
 		let pos = gridSnapPosition({x:e.offsetX, y:e.offsetY});
-		pos.x -= 43 - 32; // half of stone image width - outer margin offset
-		pos.y -= 43 - 32; // half of stone image width - outer margin offset
 
 		spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
 		spriteRenderer.drawGrid(9, 64, 32, 'black');
-		spriteRenderer.render(STONE_IMG_SRC, pos);
+		spriteRenderer.drawPlayedStones(boardModel);
+		spriteRenderer.render(BLACK_STONE_IMG_SRC, pos);
 	};
 }
 
@@ -51,7 +64,11 @@ function gridSnapPosition(pos) {
 	}
 
 	console.info(col + ',' + row);
-	return {x:col*64, y:row*64};
+
+	let snappedPos = {x:col*64, y:row*64};
+	snappedPos.x -= 43 - 32; // half of stone image width - outer margin offset
+	snappedPos.y -= 43 - 32; // half of stone image width - outer margin offset
+	return snappedPos;
 }
 
 window.onload = setup;
