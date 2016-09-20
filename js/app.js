@@ -12,11 +12,12 @@ function setup() {
 	for (let i = 0; i < BOARD_SIZE; i++) {
 		boardModel[i] = new Array(BOARD_SIZE);
 	}
-	boardModel[6][6] = 'b';
-	boardModel[3][2] = 'w';
-	boardModel[4][2] = 'w';
+	boardModel[6][6] = 'w';
 	boardModel[2][2] = 'b';
+	boardModel[3][2] = 'w';
 	boardModel[5][2] = 'b';
+	boardModel[4][2] = 'w';
+	boardModel[2][6] = 'b';
 
 	var gameCanvas = document.getElementById(CANVAS_ID);
 	gameCanvas.width = parseInt(window.getComputedStyle(gameCanvas).width);
