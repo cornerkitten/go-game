@@ -7,6 +7,10 @@ function setup() {
 	const BLACK_STONE_IMG_SRC = 'img/go-stone-black.png';
 	const WHITE_STONE_IMG_SRC = 'img/go-stone-white.png';
 	const BOARD_SIZE = 9;
+	const BLACK_STONE = 'b';
+	const WHITE_STONE = 'w';
+
+	let currentTurnColor = BLACK_STONE;
 
 	let boardModel = new Array(BOARD_SIZE);
 	for (let i = 0; i < BOARD_SIZE; i++) {
@@ -37,18 +41,41 @@ function setup() {
 	});
 
 	gameCanvas.onmousemove = (e) => {
-		console.info(e);
-
+		
 		let pos = gridSnapPosition({x:e.offsetX, y:e.offsetY});
+		let gridPos = gridPosition({x:e.offsetX, y:e.offsetY});
+		
+		if (boardModel[gridPos.row][gridPos.col] === BLACK_STONE || boardModel[gridPos.row][gridPos.col] === WHITE_STONE) {
+			return;
+		}
 
 		spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
 		spriteRenderer.drawGrid(9, 64, 32, 'black');
 		spriteRenderer.drawPlayedStones(boardModel);
-		spriteRenderer.render(BLACK_STONE_IMG_SRC, pos);
+
+		let imageSource;
+		if (currentTurnColor === BLACK_STONE) {
+			imageSource = BLACK_STONE_IMG_SRC;
+		} else {
+			imageSource = WHITE_STONE_IMG_SRC;
+		}
+		spriteRenderer.render(imageSource, pos);
+	};
+
+	gameCanvas.onclick = (e) => {
+		let gridPos = gridPosition({x:e.offsetX, y:e.offsetY});
+
+		boardModel[gridPos.row][gridPos.col] = currentTurnColor;
+
+		if (currentTurnColor === BLACK_STONE) {
+			currentTurnColor = WHITE_STONE;
+		} else {
+			currentTurnColor = BLACK_STONE;
+		}
 	};
 }
 
-function gridSnapPosition(pos) {
+function gridPosition(pos) {
 	let col = Math.floor((pos.x) / 64);
 	let row = Math.floor((pos.y) / 64);
 
@@ -64,9 +91,12 @@ function gridSnapPosition(pos) {
 		row = 8;
 	}
 
-	console.info(col + ',' + row);
+	return {row:row, col:col};
+}
 
-	let snappedPos = {x:col*64, y:row*64};
+function gridSnapPosition(pos) {
+	let gridPos = gridPosition(pos);
+	let snappedPos = {x:gridPos.col*64, y:gridPos.row*64};
 	snappedPos.x -= 43 - 32; // half of stone image width - outer margin offset
 	snappedPos.y -= 43 - 32; // half of stone image width - outer margin offset
 	return snappedPos;
