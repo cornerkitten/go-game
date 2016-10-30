@@ -1,53 +1,12 @@
-//global SpriteRenderer
 /*eslint no-console: "off"*/
 
-// class GoBoard {
+// import Player from 'Player';
+// import Player2 from 'Player2';
 //
-// }
+// console.info(Player);
+// console.info(Player2);
 
-// TODO Rename to "player"
-let Player = {
-	BLACK: Symbol('black'),
-	WHITE: Symbol('white')
-};
-Object.freeze(Player);
-
-// Private properties for GameState
-let _currentTurn = new WeakMap();
-let _boardSize = new WeakMap();
-let _board = new WeakMap();
-function newBoard(boardSize) {
-	let board = new Array(boardSize);
-	for (let i = 0; i < boardSize; i++) {
-		board[i] = new Array(boardSize);
-	}
-
-	return board;
-}
-class GameState {
-	constructor(boardSize) {
-		_currentTurn.set(this, Player.BLACK);
-
-		_boardSize.set(this, boardSize);
-		_board.set(this, newBoard(boardSize));
-
-	}
-
-	get currentTurn() {
-		return _currentTurn.get(this);
-	}
-
-	placeStone(x, y) {
-		let board = _board.get(this);
-		board[x][y] = _currentTurn.get(this);
-
-		if (_currentTurn.get(this) === Player.BLACK) {
-			_currentTurn.set(this, Player.WHITE);
-		} else {
-			_currentTurn.set(this, Player.BLACK);
-		}
-	}
-}
+import GameState from 'GameState';
 
 class Sprite {
 	constructor(source) {

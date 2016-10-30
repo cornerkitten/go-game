@@ -25,6 +25,10 @@
     "gulp-eslint": "^3.0.1",
     "gulp-jasmine-phantom": "^3.0.0",
     "gulp-sass": "^2.3.2",
-    "phantomjs-prebuilt": "^2.1.12"
+    "phantomjs-prebuilt": "^2.1.12",
+    "rollup-plugin-includepaths": "^0.1.6",
+    "rollup-stream": "^1.14.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }

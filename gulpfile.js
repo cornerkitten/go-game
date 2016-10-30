@@ -6,6 +6,10 @@ const browserSync = require('browser-sync');
 const sass = require('gulp-sass');
 const jasmine = require('gulp-jasmine-phantom');
 const babel = require('gulp-babel');
+const rollup = require('rollup-stream');
+const rollupIncludePaths = require('rollup-plugin-includepaths');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 
 gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function() {
 	gulp.watch('./*.html', ['html']);
@@ -45,7 +49,14 @@ gulp.task('lint', function() {
 });
 
 gulp.task('scripts', function() {
-	gulp.src(['js/**/*.js'])
+	return rollup({
+			entry: 'js/app.js',
+			plugins: [
+				rollupIncludePaths({paths: ['js']})
+			]
+		})
+		.pipe(source('app.js'))
+		.pipe(buffer())
 		.pipe(babel({
 			presets: ['es2015']
 		}))
