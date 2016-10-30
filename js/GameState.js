@@ -13,6 +13,7 @@ function newBoard(boardSize) {
 
 	return board;
 }
+
 export default class GameState {
 	constructor(boardSize) {
 		_currentTurn.set(this, Player.BLACK);

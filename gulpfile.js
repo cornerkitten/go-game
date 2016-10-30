@@ -1,5 +1,9 @@
 /*eslint-env node*/
 
+// TODO Consider adjusting module bundler (i.e. rollup) so that scoping
+//      constraints are maintained even after bundling (e.g. private methods
+//      from imported classes are not available in global scope)
+
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const browserSync = require('browser-sync');
