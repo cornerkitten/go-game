@@ -1,24 +1,28 @@
 
-// TODO Move this.sprites and this.loadedSprites into private fields
+let _loadedSprites = new WeakMap();
+let _sprites = new WeakMap();
+
 export default class SpriteManager {
-	// TODO Refactor so that this.sprites is merely an array of sprites
 	constructor(sprites) {
-		// TODO Hide unnecessary public fields
-		this.sprites = sprites;
-		this.loadedSprites = 0;
+		_sprites.set(this, sprites);
+		_loadedSprites.set(this, 0);
 	}
 
 	load(callback) {
-		let totalSprites = Object.keys(this.sprites).length;
+		let totalSprites = _sprites.get(this).length;
 
-		this.sprites.forEach((sprite) => {
+		_sprites.get(this).forEach((sprite) => {
 			sprite.load(() => {
-				this.loadedSprites++;
+				_loadedSprites.set(this, _loadedSprites.get(this) + 1);
 
-				if (this.loadedSprites == totalSprites) {
+				if (_loadedSprites.get(this) == totalSprites) {
 					callback();
 				}
 			});
 		});
+	}
+
+	get sprites() {
+		return _sprites.get(this).slice();
 	}
 }
