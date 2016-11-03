@@ -9,6 +9,7 @@ import Entity from 'Entity';
 import EntityManager from 'EntityManager';
 import Transform from 'Transform';
 import SpriteRenderer from 'SpriteRenderer';
+import boardView from 'behaviors/boardView';
 
 // Private properties
 let _view = new WeakMap();
@@ -32,18 +33,17 @@ export default class GameEngine {
 	init(boardSize, documentHandle, canvasId) {
 		let eventDispatcher = documentHandle.createElement('div');
 		_eventDispatcher.set(this, eventDispatcher);
-		eventDispatcher.addEventListener('PlaceStone', (e) => {
-			console.info(e.detail.player);
-		});
 
 		_gameState.set(this, new GameState(eventDispatcher, boardSize));
 		_view.set(this, new CanvasView(documentHandle, canvasId));
 		_spriteFactory.set(this, new SpriteFactory(documentHandle));
-		_entityManager.set(this, new EntityManager());
+		_entityManager.set(this, new EntityManager(eventDispatcher));
 
 		// TODO Consider renaming class SpriteManager to SpriteLoader
 		let spriteManager = new SpriteManager([
-			sprites.gameBoard
+			sprites.gameBoard,
+			sprites.blackStone,
+			sprites.whiteStone
 		]);
 		// TODO Adjust sprite architecture so that quirky buffer assignment
 		//      does not need to manually occur from GameEngine.
@@ -87,9 +87,11 @@ export default class GameEngine {
 		//      configuration, not pre-assigned references and such
 		let gameBoard = new Entity({
 			transform: new Transform(0, 0),
-			spriteRenderer: new SpriteRenderer(sprites.gameBoard)
-			// gestureRegion: new RectangleShape(64, 64),
-			// behavior: new GoBoardBehavior()
+			spriteRenderer: new SpriteRenderer(sprites.gameBoard),
+			behavior: {
+				onPlaceStone: boardView.onPlaceStone
+			}
+			// gestureRegion: new RectangleShape(64, 64)
 		});
 		let grid = new Entity({
 			transform: new Transform(0, 0),

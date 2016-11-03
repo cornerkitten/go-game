@@ -43,9 +43,11 @@ export default class GameState {
 		}
 		_currentTurn.set(this, newTurn);
 
-		let event = new CustomEvent('PlaceStone', {
+		let event = new CustomEvent('onPlaceStone', {
 			detail: {
-				player: turn
+				player: turn,
+				x: x,
+				y: y
 			}
 		});
 		_eventDispatcher.get(this).dispatchEvent(event);

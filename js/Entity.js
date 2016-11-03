@@ -2,6 +2,7 @@
 // Private properties
 let _transform = new WeakMap();
 let _children = new WeakMap();
+let _behavior = new WeakMap();
 
 export default class Entity {
 	constructor(config) {
@@ -9,6 +10,7 @@ export default class Entity {
 
 		this.spriteRenderer = config.spriteRenderer;
 		_transform.set(this, config.transform);
+		_behavior.set(this, config.behavior);
 	}
 
 	addChild(entity) {
@@ -21,5 +23,9 @@ export default class Entity {
 
 	get transform() {
 		return _transform.get(this);
+	}
+
+	get behavior() {
+		return _behavior.get(this);
 	}
 }
