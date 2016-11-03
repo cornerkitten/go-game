@@ -5,6 +5,7 @@ import Player from 'Player';
 let _currentTurn = new WeakMap();
 let _boardSize = new WeakMap();
 let _board = new WeakMap();
+let _eventDispatcher = new WeakMap();
 function newBoard(boardSize) {
 	let board = new Array(boardSize);
 	for (let i = 0; i < boardSize; i++) {
@@ -15,12 +16,16 @@ function newBoard(boardSize) {
 }
 
 export default class GameState {
-	constructor(boardSize) {
+	constructor(eventDispatcher, boardSize) {
+		_eventDispatcher.set(this, eventDispatcher);
 		_currentTurn.set(this, Player.BLACK);
 
 		_boardSize.set(this, boardSize);
 		_board.set(this, newBoard(boardSize));
+	}
 
+	get boardSize() {
+		return _boardSize.get(this);
 	}
 
 	get currentTurn() {
@@ -29,12 +34,20 @@ export default class GameState {
 
 	placeStone(x, y) {
 		let board = _board.get(this);
-		board[x][y] = _currentTurn.get(this);
+		let turn = _currentTurn.get(this);
+		board[x][y] = turn;
 
+		let newTurn = Player.BLACK;
 		if (_currentTurn.get(this) === Player.BLACK) {
-			_currentTurn.set(this, Player.WHITE);
-		} else {
-			_currentTurn.set(this, Player.BLACK);
+			newTurn = Player.WHITE;
 		}
+		_currentTurn.set(this, newTurn);
+
+		let event = new CustomEvent('PlaceStone', {
+			detail: {
+				player: turn
+			}
+		});
+		_eventDispatcher.get(this).dispatchEvent(event);
 	}
 }

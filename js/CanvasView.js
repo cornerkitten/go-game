@@ -20,12 +20,7 @@ export default class CanvasView {
 		setCanvasSizeToWindow(canvas, documentHandle.defaultView);
 	}
 
-	drawSprite(sprite, x, y) {
-		_ctx.get(this).drawImage(sprite.image, x, y, sprite.image.width,
-			sprite.image.height);
-	}
-
-	drawCanvas(canvas, x, y) {
+	draw(canvas, x, y) {
 		_ctx.get(this).drawImage(canvas, x, y, canvas.width, canvas.height);
 	}
 }

@@ -1,8 +1,14 @@
 
+import Sprite from 'Sprite';
+
 // Private properties for CanvasSpriteFactory
 let _document = new WeakMap();
 
-export default class CanvasSpriteFactory {
+function blankCanvas(documentHandle) {
+	return documentHandle.createElement('canvas');
+}
+
+export default class SpriteFactory {
 	// TODO Consider passing some sort of canvas factory, instead of
 	//      `documentHandle`, since canvas generation is all
 	//      `CanvasSpriteFactory` cares about anyway
@@ -11,7 +17,7 @@ export default class CanvasSpriteFactory {
 	}
 
 	squareGrid(offsetX, offsetY, gridSize, cellSize, thickness, color) {
-		let canvas = _document.get(this).createElement('canvas');
+		let canvas = blankCanvas(_document.get(this));
 		canvas.width = offsetX + gridSize * cellSize;
 		canvas.height = offsetY + gridSize * cellSize;
 
@@ -28,6 +34,6 @@ export default class CanvasSpriteFactory {
 		}
 		ctx.stroke();
 
-		return canvas;
+		return new Sprite(canvas);
 	}
 }

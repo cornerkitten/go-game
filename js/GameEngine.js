@@ -4,44 +4,53 @@ import GameState from 'GameState';
 import sprites from 'resources/sprites';
 import SpriteManager from 'SpriteManager';
 import CanvasView from 'CanvasView';
-import CanvasSpriteFactory from 'CanvasSpriteFactory';
+import SpriteFactory from 'SpriteFactory';
+import Entity from 'Entity';
+import EntityManager from 'EntityManager';
+import Transform from 'Transform';
+import SpriteRenderer from 'SpriteRenderer';
 
 // Private properties
 let _view = new WeakMap();
-let _canvasSprites = new WeakMap();
+let _eventDispatcher = new WeakMap();
+let _entityManager = new WeakMap();
+let _gameState = new WeakMap();
+let _spriteFactory = new WeakMap();
+
+function drawEntities(view, entities) {
+	entities.forEach( (entity) => {
+		// TODO Check if entity has sprite
+		view.draw(entity.spriteRenderer.sprite.buffer, entity.transform.x, entity.transform.y);
+		drawEntities(view, entity.children);
+	});
+}
 
 export default class GameEngine {
 	constructor() {
 	}
 
 	init(boardSize, documentHandle, canvasId) {
-		let gameState = new GameState(boardSize);
-		gameState.placeStone(7, 7);
-		gameState.placeStone(6, 6);
-		gameState.placeStone(2, 2);
-		gameState.placeStone(3, 2);
-		gameState.placeStone(5, 2);
-		gameState.placeStone(4, 4);
-		gameState.placeStone(2, 6);
-
-		_view.set(this, new CanvasView(documentHandle, canvasId));
-		let spriteManager = new SpriteManager(sprites);
-
-		let canvasSpriteFactory = new CanvasSpriteFactory(documentHandle);
-		_canvasSprites.set(this, {
-			grid: canvasSpriteFactory.squareGrid(32, 32, boardSize, 64, 0.5, 'black')
+		let eventDispatcher = documentHandle.createElement('div');
+		_eventDispatcher.set(this, eventDispatcher);
+		eventDispatcher.addEventListener('PlaceStone', (e) => {
+			console.info(e.detail.player);
 		});
 
-		spriteManager.load(this.step.bind(this));
-		// () => {
-		// 	documentHandle.defaultView.requestAnimationFrame(step);
-		// }
-		// let gameBoard = new Entity({
-		// 	gestureRegion: new RectangleShape(64, 64),
-		// 	spriteRender:
-		// 	transform: new Transform(0, 0)
-		// })
+		_gameState.set(this, new GameState(eventDispatcher, boardSize));
+		_view.set(this, new CanvasView(documentHandle, canvasId));
+		_spriteFactory.set(this, new SpriteFactory(documentHandle));
+		_entityManager.set(this, new EntityManager());
 
+		// TODO Consider renaming class SpriteManager to SpriteLoader
+		let spriteManager = new SpriteManager([
+			sprites.gameBoard
+		]);
+		// TODO Adjust sprite architecture so that quirky buffer assignment
+		//      does not need to manually occur from GameEngine.
+		spriteManager.sprites.forEach( (sprite) => {
+			sprite.buffer = documentHandle.createElement('canvas');
+		});
+		spriteManager.load(this.onStart.bind(this));
 
 		// gameCanvas.onmousemove = (e) => {
 		//
@@ -66,6 +75,39 @@ export default class GameEngine {
 		// };
 		//
 		// gameCanvas.onclick = boardOnClick;
+
+	}
+
+	onStart() {
+		let gameState = _gameState.get(this);
+		let spriteFactory = _spriteFactory.get(this);
+		let entityManager = _entityManager.get(this);
+
+		// TODO Change Entity constructor interface to merely accept a
+		//      configuration, not pre-assigned references and such
+		let gameBoard = new Entity({
+			transform: new Transform(0, 0),
+			spriteRenderer: new SpriteRenderer(sprites.gameBoard)
+			// gestureRegion: new RectangleShape(64, 64),
+			// behavior: new GoBoardBehavior()
+		});
+		let grid = new Entity({
+			transform: new Transform(0, 0),
+			spriteRenderer: new SpriteRenderer(spriteFactory.squareGrid(32, 32, gameState.boardSize, 64, 0.5, 'black'))
+		});
+		gameBoard.addChild(grid);
+		entityManager.add(gameBoard);
+
+		// TODO Consider refactoring as commands
+		gameState.placeStone(7, 7);
+		gameState.placeStone(6, 6);
+		gameState.placeStone(2, 2);
+		gameState.placeStone(3, 2);
+		gameState.placeStone(5, 2);
+		gameState.placeStone(4, 4);
+		gameState.placeStone(2, 6);
+
+		this.step();
 	}
 
 	// function boardOnClick(e) {
@@ -107,10 +149,10 @@ export default class GameEngine {
 	// 	return snappedPos;
 	// }
 
-	step(time) {
-		_view.get(this).drawSprite(sprites.gameBoard, 0, 0);
-		_view.get(this).drawCanvas(_canvasSprites.get(this).grid, 0, 0);
-		console.info(time);
-		//requestAnimationFrame(step);
+	step() {
+		// _view.get(this).drawSprite(sprites.gameBoard, 0, 0);
+		// _view.get(this).drawCanvas(_canvasSprites.get(this).grid, 0, 0);
+		drawEntities(_view.get(this), _entityManager.get(this).entities);
+		requestAnimationFrame(this.step.bind(this));
 	}
 }

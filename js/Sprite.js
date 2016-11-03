@@ -1,21 +1,51 @@
 
+let _sourceFile = new WeakMap();
+let _isLoaded = new WeakMap();
+let _buffer = new WeakMap();
+
+function drawImageToBuffer(buffer, image) {
+	buffer.width = image.width;
+	buffer.height = image.height;
+
+	let ctx = buffer.getContext('2d');
+	ctx.drawImage(image, 0, 0, image.width, image.height);
+}
+
 export default class Sprite {
-	constructor(source) {
-		this.source = source;
-		this.image = new Image();
-		this.isLoaded = false;
+	/**
+	 * `sourceFile` is optional
+	 */
+	constructor(buffer, sourceFile) {
+		_sourceFile.set(this, sourceFile);
+		_buffer.set(this, buffer);
+		_isLoaded.set(this, (sourceFile === undefined));
 	}
 
 	load(callback) {
-		if (this.isLoaded) {
+		if (_isLoaded.get(this) === true) {
 			callback();
 			return;
 		}
 
-		this.image.onload = () => {
-			this.isLoaded = true;
-			callback();
-		};
-		this.image.src = this.source;
+		if (_sourceFile.get(this) !== undefined) {
+			let image = new Image();
+			image.onload = () => {
+				drawImageToBuffer(_buffer.get(this), image);
+
+				_isLoaded.set(this, true);
+				callback();
+			};
+
+			// Setting src performs image loading
+			image.src = _sourceFile.get(this);
+		}
+	}
+
+	get buffer() {
+		return _buffer.get(this);
+	}
+
+	set buffer(newBuffer) {
+		_buffer.set(this, newBuffer);
 	}
 }

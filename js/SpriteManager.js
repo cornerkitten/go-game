@@ -3,6 +3,7 @@
 export default class SpriteManager {
 	// TODO Refactor so that this.sprites is merely an array of sprites
 	constructor(sprites) {
+		// TODO Hide unnecessary public fields
 		this.sprites = sprites;
 		this.loadedSprites = 0;
 	}
@@ -10,8 +11,8 @@ export default class SpriteManager {
 	load(callback) {
 		let totalSprites = Object.keys(this.sprites).length;
 
-		Object.keys(this.sprites).forEach((key) => {
-			this.sprites[key].load(() => {
+		this.sprites.forEach((sprite) => {
+			sprite.load(() => {
 				this.loadedSprites++;
 
 				if (this.loadedSprites == totalSprites) {
