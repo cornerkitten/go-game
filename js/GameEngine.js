@@ -6,7 +6,7 @@ import SpriteManager from 'SpriteManager';
 import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
 import EntityManager from 'EntityManager';
-import BoardView from 'behaviors/BoardView';
+import BoardBehavior from 'behaviors/BoardBehavior';
 
 // Private properties
 let _view = new WeakMap();
@@ -68,7 +68,7 @@ export default class GameEngine {
 			},
 			behaviors: [
 				{
-					component: BoardView,
+					component: BoardBehavior,
 					params: {
 						entityManager: entityManager,
 						gameState: gameState
