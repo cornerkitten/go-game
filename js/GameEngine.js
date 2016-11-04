@@ -28,7 +28,8 @@ export default class GameEngine {
 	}
 
 	init(boardSize, documentHandle, canvasId) {
-		let eventDispatcher = documentHandle.createElement('div');
+		// let eventDispatcher = documentHandle.createElement('div');
+		let eventDispatcher = documentHandle.getElementById(canvasId);
 		_eventDispatcher.set(this, eventDispatcher);
 
 		_gameState.set(this, new GameState(eventDispatcher, boardSize));
@@ -48,31 +49,6 @@ export default class GameEngine {
 			sprite.buffer = documentHandle.createElement('canvas');
 		});
 		spriteManager.load(this.onStart.bind(this));
-
-		// gameCanvas.onmousemove = (e) => {
-		//
-		// 	let pos = gridSnapPosition({x:e.offsetX, y:e.offsetY});
-		// 	let gridPos = gridPosition({x:e.offsetX, y:e.offsetY});
-		//
-		// 	if (boardModel[gridPos.row][gridPos.col] === BLACK_STONE || boardModel[gridPos.row][gridPos.col] === WHITE_STONE) {
-		// 		return;
-		// 	}
-		//
-		// 	spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
-		// 	spriteRenderer.drawGrid(9, 64, 32, 'black');
-		// 	spriteRenderer.drawPlayedStones(boardModel);
-		//
-		// 	let imageSource;
-		// 	if (currentTurnColor === BLACK_STONE) {
-		// 		imageSource = BLACK_STONE_IMG_SRC;
-		// 	} else {
-		// 		imageSource = WHITE_STONE_IMG_SRC;
-		// 	}
-		// 	spriteRenderer.render(imageSource, pos);
-		// };
-		//
-		// gameCanvas.onclick = boardOnClick;
-
 	}
 
 	onStart() {
@@ -91,7 +67,13 @@ export default class GameEngine {
 				sprite: sprites.gameBoard
 			},
 			behaviors: [
-				BoardView
+				{
+					component: BoardView,
+					params: {
+						entityManager: entityManager,
+						gameState: gameState
+					}
+				}
 			]
 			// gestureRegion: new RectangleShape(64, 64)
 		});
@@ -118,45 +100,6 @@ export default class GameEngine {
 
 		this.step();
 	}
-
-	// function boardOnClick(e) {
-	// 	let gamePos = gridPosition({x:e.offsetX, y:e.offsetY});
-	//
-	// 	boardModel[gamePos.row][gamePos.col] = currentTurnColor;
-	//
-	// 	if (currentTurnColor === BLACK_STONE) {
-	// 		currentTurnColor = WHITE_STONE;
-	// 	} else {
-	// 		currentTurnColor = BLACK_STONE;
-	// 	}
-	// }
-	//
-	// function gridPosition(pos) {
-	// 	let col = Math.floor((pos.x) / 64);
-	// 	let row = Math.floor((pos.y) / 64);
-	//
-	// 	if (col < 0) {
-	// 		col = 0;
-	// 	} else if (col > 8) {
-	// 		col = 8;
-	// 	}
-	//
-	// 	if (row < 0) {
-	// 		row = 0;
-	// 	} else if (row > 8) {
-	// 		row = 8;
-	// 	}
-	//
-	// 	return {row:row, col:col};
-	// }
-	//
-	// function gridSnapPosition(pos) {
-	// 	let gridPos = gridPosition(pos);
-	// 	let snappedPos = {x:gridPos.col*64, y:gridPos.row*64};
-	// 	snappedPos.x -= 43 - 32; // half of stone image width - outer margin offset
-	// 	snappedPos.y -= 43 - 32; // half of stone image width - outer margin offset
-	// 	return snappedPos;
-	// }
 
 	step() {
 		// _view.get(this).drawSprite(sprites.gameBoard, 0, 0);

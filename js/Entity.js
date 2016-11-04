@@ -5,21 +5,21 @@ import SpriteRenderer from 'SpriteRenderer';
 // Private properties
 let _transform = new WeakMap();
 let _children = new WeakMap();
-// let _behavior = new WeakMap();
 let _behaviors = new WeakMap();
 
 export default class Entity {
-	constructor(config, entityManager) {
+	// TODO Update component design so that additional parameters can be passed
+	//      to behaviors
+	constructor(config) {
 		_children.set(this, []);
 
 		this.spriteRenderer = new SpriteRenderer(config.spriteRenderer.sprite);
 		_transform.set(this, new Transform(config.transform.x, config.transform.y));
-		// _behavior.set(this, config.behavior);
 
 		_behaviors.set(this, []);
 		if (config.behaviors !== undefined) {
 			config.behaviors.forEach((behavior) => {
-				_behaviors.get(this).push(new behavior(entityManager));
+				_behaviors.get(this).push(new behavior.component(behavior.params));
 			});
 		}
 	}
@@ -47,8 +47,4 @@ export default class Entity {
 			child.dispatchEvent(e);
 		});
 	}
-
-	// get behavior() {
-	// 	return _behavior.get(this);
-	// }
 }
