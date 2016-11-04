@@ -5,9 +5,8 @@ import sprites from 'resources/sprites';
 import SpriteManager from 'SpriteManager';
 import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
-import Entity from 'Entity';
 import EntityManager from 'EntityManager';
-import boardView from 'behaviors/boardView';
+import BoardView from 'behaviors/BoardView';
 
 // Private properties
 let _view = new WeakMap();
@@ -83,7 +82,7 @@ export default class GameEngine {
 
 		// TODO Change Entity constructor interface to merely accept a
 		//      configuration, not pre-assigned references and such
-		let gameBoard = new Entity({
+		let gameBoard = entityManager.create({
 			transform: {
 				x: 0,
 				y: 0
@@ -91,12 +90,12 @@ export default class GameEngine {
 			spriteRenderer: {
 				sprite: sprites.gameBoard
 			},
-			behavior: {
-				onPlaceStone: boardView.onPlaceStone
-			}
+			behaviors: [
+				BoardView
+			]
 			// gestureRegion: new RectangleShape(64, 64)
 		});
-		let grid = new Entity({
+		let grid = entityManager.create({
 			transform: {
 				x: 0,
 				y: 0
