@@ -7,8 +7,6 @@ import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
 import Entity from 'Entity';
 import EntityManager from 'EntityManager';
-import Transform from 'Transform';
-import SpriteRenderer from 'SpriteRenderer';
 import boardView from 'behaviors/boardView';
 
 // Private properties
@@ -86,16 +84,26 @@ export default class GameEngine {
 		// TODO Change Entity constructor interface to merely accept a
 		//      configuration, not pre-assigned references and such
 		let gameBoard = new Entity({
-			transform: new Transform(0, 0),
-			spriteRenderer: new SpriteRenderer(sprites.gameBoard),
+			transform: {
+				x: 0,
+				y: 0
+			},
+			spriteRenderer: {
+				sprite: sprites.gameBoard
+			},
 			behavior: {
 				onPlaceStone: boardView.onPlaceStone
 			}
 			// gestureRegion: new RectangleShape(64, 64)
 		});
 		let grid = new Entity({
-			transform: new Transform(0, 0),
-			spriteRenderer: new SpriteRenderer(spriteFactory.squareGrid(32, 32, gameState.boardSize, 64, 0.5, 'black'))
+			transform: {
+				x: 0,
+				y: 0
+			},
+			spriteRenderer: {
+				sprite: spriteFactory.squareGrid(32, 32, gameState.boardSize, 64, 0.5, 'black')
+			}
 		});
 		gameBoard.addChild(grid);
 		entityManager.add(gameBoard);

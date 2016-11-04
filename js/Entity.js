@@ -1,4 +1,7 @@
 
+import Transform from 'Transform';
+import SpriteRenderer from 'SpriteRenderer';
+
 // Private properties
 let _transform = new WeakMap();
 let _children = new WeakMap();
@@ -8,8 +11,8 @@ export default class Entity {
 	constructor(config) {
 		_children.set(this, []);
 
-		this.spriteRenderer = config.spriteRenderer;
-		_transform.set(this, config.transform);
+		this.spriteRenderer = new SpriteRenderer(config.spriteRenderer.sprite);
+		_transform.set(this, new Transform(config.transform.x, config.transform.y));
 		_behavior.set(this, config.behavior);
 	}
 
