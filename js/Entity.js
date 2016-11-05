@@ -8,7 +8,6 @@ let _spriteRenderer = new WeakMap();
 let _children = new WeakMap();
 let _behaviors = new WeakMap();
 
-// TODO Update so that all components are optional
 // TODO Add mechanism for components to communicate with other components of the
 //      same entity (e.g. behavior talks with sprite render to change sprite)
 export default class Entity {

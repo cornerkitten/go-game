@@ -2,7 +2,7 @@
 
 import GameState from 'GameState';
 import sprites from 'resources/sprites';
-import SpriteManager from 'SpriteManager';
+import SpriteLoader from 'SpriteLoader';
 import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
 import EntityManager from 'EntityManager';
@@ -29,18 +29,18 @@ export default class GameEngine {
 		_spriteFactory.set(this, new SpriteFactory(documentHandle));
 		_entityManager.set(this, new EntityManager(eventDispatcher));
 
-		// TODO Consider renaming class SpriteManager to SpriteLoader
-		let spriteManager = new SpriteManager([
+		let spritesToLoad = [
 			sprites.gameBoard,
 			sprites.blackStone,
 			sprites.whiteStone
-		]);
+		];
+		let spriteLoader = new SpriteLoader(spritesToLoad);
 		// TODO Adjust sprite architecture so that quirky buffer assignment
 		//      does not need to manually occur from GameEngine.
-		spriteManager.sprites.forEach( (sprite) => {
+		spritesToLoad.forEach( (sprite) => {
 			sprite.buffer = documentHandle.createElement('canvas');
 		});
-		spriteManager.load(this.onStart.bind(this));
+		spriteLoader.load(this.onStart.bind(this));
 	}
 
 	onStart() {

@@ -2,7 +2,7 @@
 let _loadedSprites = new WeakMap();
 let _sprites = new WeakMap();
 
-export default class SpriteManager {
+export default class SpriteLoader {
 	constructor(sprites) {
 		_sprites.set(this, sprites);
 		_loadedSprites.set(this, 0);
@@ -20,9 +20,5 @@ export default class SpriteManager {
 				}
 			});
 		});
-	}
-
-	get sprites() {
-		return _sprites.get(this).slice();
 	}
 }

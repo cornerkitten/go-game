@@ -15,6 +15,7 @@ function newBoard(boardSize) {
 	return board;
 }
 
+// TODO Consider refactoring GameState into a behavior of an entity
 export default class GameState {
 	constructor(eventDispatcher, boardSize) {
 		_eventDispatcher.set(this, eventDispatcher);
