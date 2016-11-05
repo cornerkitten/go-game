@@ -8,6 +8,9 @@ let _spriteRenderer = new WeakMap();
 let _children = new WeakMap();
 let _behaviors = new WeakMap();
 
+// TODO Treat all comonents equally for interface
+//      (e.g. Instead of having getter for transform or spriteRenderer
+//      components, have a method getComponent(componentClass))
 // TODO Add mechanism for components to communicate with other components of the
 //      same entity (e.g. behavior talks with sprite render to change sprite)
 export default class Entity {
@@ -25,7 +28,7 @@ export default class Entity {
 		_behaviors.set(this, []);
 		if (config.behaviors !== undefined) {
 			config.behaviors.forEach((behavior) => {
-				_behaviors.get(this).push(new behavior.component(behavior.params));
+				_behaviors.get(this).push(new behavior.component(behavior.params, this));
 			});
 		}
 	}

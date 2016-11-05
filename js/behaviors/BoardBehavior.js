@@ -1,4 +1,3 @@
-/*eslint no-console: "off"*/
 
 import sprites from 'resources/sprites';
 import Player from 'Player';
@@ -6,8 +5,9 @@ import Player from 'Player';
 let _entityManager = new WeakMap();
 let _gameState = new WeakMap();
 
-	// TODO Consider accuracy of calculation, with respect to drawn grid
-	// TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
+// TODO Consider accuracy of calculation, with respect to drawn grid
+// TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
+// TODO Refactor into shared location
 function modelToViewPos(x, y) {
 	return {
 		x: x * 64 - 12,
@@ -15,6 +15,7 @@ function modelToViewPos(x, y) {
 	};
 }
 
+// TODO Refactor into shared location
 function viewToModelPos(x, y) {
 	// TODO Consider accuracy of calculation, with respect to drawn grid
 	// TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
@@ -55,10 +56,7 @@ export default class BoardBehavior {
 
 	// TODO Consider refactoring as GestureTap (to encompass mouse and touch)
 	click(e) {
-		console.info('BoardView' + e);
-
 		let modelPos = viewToModelPos(e.offsetX, e.offsetY);
-		console.info(modelPos);
 
 		// TODO Make sure that stone is only for legal moves
 		_gameState.get(this).placeStone(modelPos.x, modelPos.y);

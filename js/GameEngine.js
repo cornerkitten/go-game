@@ -7,6 +7,7 @@ import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
 import EntityManager from 'EntityManager';
 import BoardBehavior from 'behaviors/BoardBehavior';
+import PreviewStoneBehavior from 'behaviors/PreviewStoneBehavior';
 
 // Private properties
 let _view = new WeakMap();
@@ -80,6 +81,23 @@ export default class GameEngine {
 		});
 		gameBoard.addChild(grid);
 		entityManager.add(gameBoard);
+
+		// TODO Add transparency property to spriteRenderer config
+		let previewStone = entityManager.create({
+			transform: {
+				x: 0,
+				y: 0,
+			},
+			spriteRenderer: {
+				sprite: sprites.blackStone
+			},
+			behaviors: [
+				{
+					component: PreviewStoneBehavior
+				}
+			]
+		});
+		entityManager.add(previewStone);
 
 		// TODO Consider refactoring as commands
 		gameState.placeStone(7, 7);

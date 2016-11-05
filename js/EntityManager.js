@@ -1,4 +1,3 @@
-/*eslint no-console: "off"*/
 
 import Entity from 'Entity';
 
@@ -6,11 +5,11 @@ let _entities = new WeakMap();
 let _eventDispatcher = new WeakMap();
 const observableEvents = [
 	'onPlaceStone',
-	'click'
+	'click',
+	'mousemove'
 ];
 
 function dispatchEvent(e) {
-	console.info(e);
 	_entities.get(this).forEach((entity) => {
 		entity.dispatchEvent(e);
 	});

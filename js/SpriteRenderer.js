@@ -10,4 +10,8 @@ export default class SpriteRenderer {
 	get sprite() {
 		return _sprite.get(this);
 	}
+
+	set sprite(newSprite) {
+		_sprite.set(this, newSprite);
+	}
 }
