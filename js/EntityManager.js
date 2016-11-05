@@ -19,7 +19,7 @@ function drawEntities(view, entities) {
 	entities.forEach( (entity) => {
 		// TODO Check if entity has sprite
 		if (entity.spriteRenderer !== undefined) {
-			view.draw(entity.spriteRenderer.sprite.buffer, entity.transform.x, entity.transform.y);
+			view.draw(entity.spriteRenderer, entity.transform);
 		}
 		drawEntities(view, entity.children);
 	});

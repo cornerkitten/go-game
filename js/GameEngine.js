@@ -89,7 +89,8 @@ export default class GameEngine {
 				y: 0,
 			},
 			spriteRenderer: {
-				sprite: sprites.blackStone
+				sprite: sprites.blackStone,
+				alpha: 0.64
 			},
 			behaviors: [
 				{

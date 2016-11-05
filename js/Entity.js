@@ -22,7 +22,7 @@ export default class Entity {
 		}
 
 		if (config.spriteRenderer !== undefined) {
-			_spriteRenderer.set(this, new SpriteRenderer(config.spriteRenderer.sprite));
+			_spriteRenderer.set(this, new SpriteRenderer(config.spriteRenderer.sprite, config.spriteRenderer.alpha));
 		}
 
 		_behaviors.set(this, []);

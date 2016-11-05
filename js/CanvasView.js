@@ -20,8 +20,14 @@ export default class CanvasView {
 		setCanvasSizeToWindow(canvas, documentHandle.defaultView);
 	}
 
-	draw(canvas, x, y) {
-		_ctx.get(this).drawImage(canvas, x, y, canvas.width, canvas.height);
+	draw(spriteRenderer, transform) {
+		let canvas = spriteRenderer.sprite.buffer;
+		let ctx = _ctx.get(this);
+
+		ctx.save();
+		ctx.globalAlpha = spriteRenderer.alpha;
+		ctx.drawImage(canvas, transform.x, transform.y, canvas.width, canvas.height);
+		ctx.restore();
 	}
 
 	clear() {
