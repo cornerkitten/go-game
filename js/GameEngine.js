@@ -15,14 +15,6 @@ let _entityManager = new WeakMap();
 let _gameState = new WeakMap();
 let _spriteFactory = new WeakMap();
 
-function drawEntities(view, entities) {
-	entities.forEach( (entity) => {
-		// TODO Check if entity has sprite
-		view.draw(entity.spriteRenderer.sprite.buffer, entity.transform.x, entity.transform.y);
-		drawEntities(view, entity.children);
-	});
-}
-
 export default class GameEngine {
 	constructor() {
 	}
@@ -102,9 +94,7 @@ export default class GameEngine {
 	}
 
 	step() {
-		// _view.get(this).drawSprite(sprites.gameBoard, 0, 0);
-		// _view.get(this).drawCanvas(_canvasSprites.get(this).grid, 0, 0);
-		drawEntities(_view.get(this), _entityManager.get(this).entities);
+		_entityManager.get(this).draw(_view.get(this));
 		requestAnimationFrame(this.step.bind(this));
 	}
 }

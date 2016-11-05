@@ -23,4 +23,9 @@ export default class CanvasView {
 	draw(canvas, x, y) {
 		_ctx.get(this).drawImage(canvas, x, y, canvas.width, canvas.height);
 	}
+
+	clear() {
+		let canvas = _canvas.get(this);
+		_ctx.get(this).clearRect(0, 0, canvas.width, canvas.height);
+	}
 }
