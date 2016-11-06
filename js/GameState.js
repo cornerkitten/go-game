@@ -31,6 +31,15 @@ function adjacentPositions(board, x, y) {
 function adjacentChains(board, x, y, player) {
 	let chains = [];
 	adjacentPositions(board, x, y).forEach((pos) => {
+		let hasPosInChainAlready = chains.find(
+			chain => chain.stones.find(
+				stone => stone.x === pos.x && stone.y === pos.y
+			)
+		);
+		if (hasPosInChainAlready) {
+			return;
+		}
+
 		let chainStones = [];
 		let chainLiberties = [];
 		chainAtPos(board, pos.x, pos.y, player, chainStones, chainLiberties);
