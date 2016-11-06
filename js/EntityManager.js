@@ -3,8 +3,10 @@ import Entity from 'Entity';
 
 let _entities = new WeakMap();
 let _eventDispatcher = new WeakMap();
+let _entitiesToDestroy = new WeakMap();
 const observableEvents = [
 	'onPlaceStone',
+	'onCaptureStone',
 	'click',
 	'mousemove'
 ];
@@ -28,6 +30,7 @@ function drawEntities(view, entities) {
 export default class EntityManager {
 	constructor(eventDispatcher) {
 		_entities.set(this, []);
+		_entitiesToDestroy.set(this, []);
 		_eventDispatcher.set(this, eventDispatcher);
 
 		observableEvents.forEach((eventName) => {
@@ -43,8 +46,21 @@ export default class EntityManager {
 		_entities.get(this).push(entity);
 	}
 
+	destroy(entity) {
+		_entitiesToDestroy.get(this).push(entity);
+	}
+
 	draw(view) {
 		view.clear();
 		drawEntities(view, _entities.get(this));
+	}
+
+	step() {
+		// TODO Destroy recursively
+		_entitiesToDestroy.get(this).forEach((entity) => {
+			let index = _entities.get(this).indexOf(entity);
+			_entities.get(this).splice(index, 1);
+		});
+		_entitiesToDestroy.set(this, []);
 	}
 }

@@ -86,7 +86,7 @@ export default class GameEngine {
 		let previewStone = entityManager.create({
 			transform: {
 				x: 0,
-				y: 0,
+				y: 0
 			},
 			spriteRenderer: {
 				sprite: sprites.blackStone,
@@ -101,18 +101,19 @@ export default class GameEngine {
 		entityManager.add(previewStone);
 
 		// TODO Consider refactoring as commands
-		gameState.placeStone(7, 7);
-		gameState.placeStone(6, 6);
-		gameState.placeStone(2, 2);
-		gameState.placeStone(3, 2);
-		gameState.placeStone(5, 2);
-		gameState.placeStone(4, 4);
-		gameState.placeStone(2, 6);
+		// gameState.placeStone(7, 7);
+		// gameState.placeStone(6, 6);
+		// gameState.placeStone(2, 2);
+		// gameState.placeStone(3, 2);
+		// gameState.placeStone(5, 2);
+		// gameState.placeStone(4, 4);
+		// gameState.placeStone(2, 6);
 
 		this.step();
 	}
 
 	step() {
+		_entityManager.get(this).step();
 		_entityManager.get(this).draw(_view.get(this));
 		requestAnimationFrame(this.step.bind(this));
 	}

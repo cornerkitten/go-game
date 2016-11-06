@@ -1,6 +1,7 @@
 
 import sprites from 'resources/sprites';
 import Player from 'Player';
+import StoneBehavior from 'StoneBehavior';
 
 let _entityManager = new WeakMap();
 let _gameState = new WeakMap();
@@ -46,7 +47,19 @@ export default class BoardBehavior {
 			},
 			spriteRenderer: {
 				sprite: sprite
-			}
+			},
+			behaviors: [
+				{
+					component: StoneBehavior,
+					params: {
+						entityManager: _entityManager.get(this),
+						boardPos: {
+							x: e.detail.x,
+							y: e.detail.y
+						}
+					}
+				}
+			]
 		});
 
 		// TODO Consider whether stones should be added as children to
@@ -61,28 +74,4 @@ export default class BoardBehavior {
 		// TODO Make sure that stone is only for legal moves
 		_gameState.get(this).placeStone(modelPos.x, modelPos.y);
 	}
-
-	// gameCanvas.onmousemove = (e) => {
-	//
-	// 	let pos = gridSnapPosition({x:e.offsetX, y:e.offsetY});
-	// 	let gridPos = gridPosition({x:e.offsetX, y:e.offsetY});
-	//
-	// 	if (boardModel[gridPos.row][gridPos.col] === BLACK_STONE || boardModel[gridPos.row][gridPos.col] === WHITE_STONE) {
-	// 		return;
-	// 	}
-	//
-	// 	spriteRenderer.render(GAME_BOARD_IMG_SRC, {x:0, y:0});
-	// 	spriteRenderer.drawGrid(9, 64, 32, 'black');
-	// 	spriteRenderer.drawPlayedStones(boardModel);
-	//
-	// 	let imageSource;
-	// 	if (currentTurnColor === BLACK_STONE) {
-	// 		imageSource = BLACK_STONE_IMG_SRC;
-	// 	} else {
-	// 		imageSource = WHITE_STONE_IMG_SRC;
-	// 	}
-	// 	spriteRenderer.render(imageSource, pos);
-	// };
-	//
-	// gameCanvas.onclick = boardOnClick;
 }
