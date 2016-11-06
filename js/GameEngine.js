@@ -68,7 +68,8 @@ export default class GameEngine {
 					}
 				}
 			]
-			// gestureRegion: new RectangleShape(64, 64)
+			// TODO Implement gesture regions
+			//      e.g. gestureRegion: new RectangleShape(64, 64)
 		});
 		let grid = entityManager.create({
 			transform: {
@@ -82,7 +83,6 @@ export default class GameEngine {
 		gameBoard.addChild(grid);
 		entityManager.add(gameBoard);
 
-		// TODO Add transparency property to spriteRenderer config
 		let previewStone = entityManager.create({
 			transform: {
 				x: 0,

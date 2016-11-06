@@ -93,6 +93,7 @@ export default class GameState {
 		return _currentTurn.get(this);
 	}
 
+	// TODO Refactor so that method is smaller/simpler
 	placeStone(x, y) {
 		let board = _board.get(this);
 		if(hasPlayedAt(board, x, y)) {
