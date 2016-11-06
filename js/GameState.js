@@ -14,6 +14,9 @@ function newBoard(boardSize) {
 
 	return board;
 }
+function hasPlayedAt(board, x, y) {
+	return board[x][y] !== undefined;
+}
 
 // TODO Consider refactoring GameState into a behavior of an entity
 export default class GameState {
@@ -35,6 +38,10 @@ export default class GameState {
 
 	placeStone(x, y) {
 		let board = _board.get(this);
+		if(hasPlayedAt(board, x, y)) {
+			return;
+		}
+
 		let turn = _currentTurn.get(this);
 		board[x][y] = turn;
 
