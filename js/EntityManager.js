@@ -30,16 +30,11 @@ function drawEntities(view, entities) {
 	});
 }
 
+// TODO Refactor world into its own class World
 function newWorld(entityManager) {
 	return {
-		addEntity: (entityBlueprint) => {
-			let entity = entityManager.create(entityBlueprint);
-			entityManager.add(entity);
-			return entity;
-		},
-		destroyEntity: (entity) => {
-			entityManager.destroy(entity);
-		},
+		addEntity: entityManager.add.bind(entityManager),
+		destroyEntity: entityManager.destroy.bind(entityManager),
 		dispatchEvent: dispatchEvent.bind(entityManager)
 	};
 }
@@ -56,13 +51,10 @@ export default class EntityManager {
 		});
 	}
 
-	// TODO Refactor world into its own class World
-	create(entityConfig) {
-		return new Entity(entityConfig, _world.get(this));
-	}
-
-	add(entity) {
+	add(entityBlueprint) {
+		let entity = new Entity(entityBlueprint, _world.get(this));
 		_entities.get(this).push(entity);
+		return entity;
 	}
 
 	destroy(entity) {

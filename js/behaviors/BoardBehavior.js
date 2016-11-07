@@ -30,6 +30,15 @@ export default class BoardBehavior {
 
 	onSetup(e) {
 		_gameState.set(this, new GameState(e.detail.boardSize));
+
+		// Sample setup
+		// gameState.placeStone(7, 7);
+		// gameState.placeStone(6, 6);
+		// gameState.placeStone(2, 2);
+		// gameState.placeStone(3, 2);
+		// gameState.placeStone(5, 2);
+		// gameState.placeStone(4, 4);
+		// gameState.placeStone(2, 6);
 	}
 
 	onPlaceStone(e) {

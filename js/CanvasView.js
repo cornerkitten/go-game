@@ -21,6 +21,10 @@ export default class CanvasView {
 	}
 
 	draw(spriteRenderer, transform) {
+		if (spriteRenderer.sprite == null) {
+			return;
+		}
+
 		let canvas = spriteRenderer.sprite.buffer;
 		let ctx = _ctx.get(this);
 
