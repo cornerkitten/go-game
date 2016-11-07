@@ -1,5 +1,5 @@
 
-import SpriteRenderer from 'SpriteRenderer';
+import SpriteRenderer from 'components/SpriteRenderer';
 
 export default class GridBehavior {
 	constructor() {

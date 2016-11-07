@@ -1,6 +1,6 @@
 
-import Transform from 'Transform';
-import SpriteRenderer from 'SpriteRenderer';
+import Transform from 'components/Transform';
+import SpriteRenderer from 'components/SpriteRenderer';
 
 // Private properties
 let _transform = new WeakMap();
