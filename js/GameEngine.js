@@ -1,6 +1,6 @@
 /*eslint no-console: "off"*/
 
-import GameState from 'GameState';
+// import GameState from 'GameState';
 import sprites from 'resources/sprites';
 import SpriteLoader from 'SpriteLoader';
 import CanvasView from 'CanvasView';
@@ -13,7 +13,6 @@ import previewStoneBlueprint from 'blueprints/previewStoneBlueprint';
 let _view = new WeakMap();
 let _eventDispatcher = new WeakMap();
 let _entityManager = new WeakMap();
-let _gameState = new WeakMap();
 let _spriteFactory = new WeakMap();
 
 export default class GameEngine {
@@ -21,11 +20,9 @@ export default class GameEngine {
 	}
 
 	init(boardSize, documentHandle, canvasId) {
-		// let eventDispatcher = documentHandle.createElement('div');
 		let eventDispatcher = documentHandle.getElementById(canvasId);
 		_eventDispatcher.set(this, eventDispatcher);
 
-		_gameState.set(this, new GameState(eventDispatcher, boardSize));
 		_view.set(this, new CanvasView(documentHandle, canvasId));
 		_spriteFactory.set(this, new SpriteFactory(documentHandle));
 		_entityManager.set(this, new EntityManager(eventDispatcher));
@@ -41,11 +38,13 @@ export default class GameEngine {
 		spritesToLoad.forEach( (sprite) => {
 			sprite.buffer = documentHandle.createElement('canvas');
 		});
-		spriteLoader.load(this.onStart.bind(this));
+		spriteLoader.load(() => {
+			this.onStart(boardSize);
+		});
 	}
 
-	onStart() {
-		let gameState = _gameState.get(this);
+	// TODO Rename to start()
+	onStart(boardSize) {
 		let spriteFactory = _spriteFactory.get(this);
 		let entityManager = _entityManager.get(this);
 
@@ -61,22 +60,26 @@ export default class GameEngine {
 			},
 			behaviors: [
 				{
-					component: BoardBehavior,
-					params: {
-						gameState: gameState
-					}
+					component: BoardBehavior
 				}
 			]
 			// TODO Implement gesture regions
 			//      e.g. gestureRegion: new RectangleShape(64, 64)
 		});
+		let boardSetupEvent = new CustomEvent('onSetup', {
+			detail: {
+				boardSize: boardSize
+			}
+		});
+		gameBoard.dispatchEvent(boardSetupEvent);
+
 		let grid = entityManager.create({
 			transform: {
 				x: 0,
 				y: 0
 			},
 			spriteRenderer: {
-				sprite: spriteFactory.squareGrid(32, 32, gameState.boardSize, 64, 0.5, 'black')
+				sprite: spriteFactory.squareGrid(32, 32, boardSize, 64, 0.5, 'black')
 			}
 		});
 		gameBoard.addChild(grid);

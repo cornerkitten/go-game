@@ -6,7 +6,7 @@ import Player from 'Player';
 let _currentTurn = new WeakMap();
 let _boardSize = new WeakMap();
 let _board = new WeakMap();
-let _eventDispatcher = new WeakMap();
+
 function newBoard(boardSize) {
 	let board = new Array(boardSize);
 	for (let i = 0; i < boardSize; i++) {
@@ -77,8 +77,7 @@ function captureStones(board, stones) {
 
 // TODO Consider refactoring GameState into a behavior of an entity
 export default class GameState {
-	constructor(eventDispatcher, boardSize) {
-		_eventDispatcher.set(this, eventDispatcher);
+	constructor(boardSize) {
 		_currentTurn.set(this, Player.BLACK);
 
 		_boardSize.set(this, boardSize);
@@ -97,7 +96,7 @@ export default class GameState {
 	placeStone(x, y) {
 		let board = _board.get(this);
 		if(hasPlayedAt(board, x, y)) {
-			return;
+			return null;
 		}
 
 		let turn = _currentTurn.get(this);
@@ -119,24 +118,6 @@ export default class GameState {
 
 		_currentTurn.set(this, newTurn);
 
-		let event = new CustomEvent('onPlaceStone', {
-			detail: {
-				player: turn,
-				x: x,
-				y: y
-			}
-		});
-		_eventDispatcher.get(this).dispatchEvent(event);
-		capturedChains.forEach((chain) => {
-			chain.stones.forEach((stone) => {
-				let captureEvent = new CustomEvent('onCaptureStone', {
-					detail: {
-						x: stone.x,
-						y: stone.y
-					}
-				});
-				_eventDispatcher.get(this).dispatchEvent(captureEvent);
-			});
-		});
+		return capturedChains;
 	}
 }

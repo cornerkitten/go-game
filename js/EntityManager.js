@@ -39,7 +39,8 @@ function newWorld(entityManager) {
 		},
 		destroyEntity: (entity) => {
 			entityManager.destroy(entity);
-		}
+		},
+		dispatchEvent: dispatchEvent.bind(entityManager)
 	};
 }
 

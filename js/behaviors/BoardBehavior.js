@@ -1,5 +1,6 @@
 
 import stoneBlueprint from 'blueprints/stoneBlueprint';
+import GameState from 'GameState';
 
 let _gameState = new WeakMap();
 
@@ -24,8 +25,11 @@ function viewToModelPos(x, y) {
 }
 
 export default class BoardBehavior {
-	constructor(params) {
-		_gameState.set(this, params.gameState);
+	constructor() {
+	}
+
+	onSetup(e) {
+		_gameState.set(this, new GameState(e.detail.boardSize));
 	}
 
 	onPlaceStone(e) {
@@ -54,8 +58,35 @@ export default class BoardBehavior {
 	// TODO Consider refactoring as GestureTap (to encompass mouse and touch)
 	click(e) {
 		let modelPos = viewToModelPos(e.offsetX, e.offsetY);
+		let gameState = _gameState.get(this);
+		let turn = gameState.currentTurn;
 
 		// TODO Make sure that stone is only for legal moves
-		_gameState.get(this).placeStone(modelPos.x, modelPos.y);
+		let capturedChains = gameState.placeStone(modelPos.x, modelPos.y);
+
+		// Move is illegal
+		if (capturedChains == null) {
+			return;
+		}
+
+		let event = new CustomEvent('onPlaceStone', {
+			detail: {
+				player: turn,
+				x: modelPos.x,
+				y: modelPos.y
+			}
+		});
+		this.world.dispatchEvent(event);
+		capturedChains.forEach((chain) => {
+			chain.stones.forEach((stone) => {
+				let captureEvent = new CustomEvent('onCaptureStone', {
+					detail: {
+						x: stone.x,
+						y: stone.y
+					}
+				});
+				this.world.dispatchEvent(captureEvent);
+			});
+		});
 	}
 }
