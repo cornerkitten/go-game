@@ -1,5 +1,6 @@
 
 import Entity from 'Entity';
+import World from 'World';
 import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
@@ -20,10 +21,10 @@ export default class EntityManager {
 		_entities.set(this, []);
 		_entitiesToDestroy.set(this, []);
 		_eventDispatcher.set(this, eventDispatcher);
-		_world.set(this, newWorld(this));
+		_world.set(this, new World(this));
 
 		observableEvents.forEach((eventName) => {
-			eventDispatcher.addEventListener(eventName, dispatchEvent.bind(this));
+			eventDispatcher.addEventListener(eventName, this.dispatchEvent.bind(this));
 		});
 	}
 
@@ -43,19 +44,19 @@ export default class EntityManager {
 	}
 
 	step() {
-		// TODO Destroy recursively
+		// TODO Consider need to destroy recursively
 		_entitiesToDestroy.get(this).forEach((entity) => {
 			let index = _entities.get(this).indexOf(entity);
 			_entities.get(this).splice(index, 1);
 		});
 		_entitiesToDestroy.set(this, []);
 	}
-}
 
-function dispatchEvent(e) {
-	_entities.get(this).forEach((entity) => {
-		entity.dispatchEvent(e);
-	});
+	dispatchEvent(e) {
+		_entities.get(this).forEach((entity) => {
+			entity.dispatchEvent(e);
+		});
+	}
 }
 
 function drawEntities(view, entities) {
@@ -66,13 +67,4 @@ function drawEntities(view, entities) {
 		}
 		drawEntities(view, entity.children);
 	});
-}
-
-// TODO Refactor world into its own class World
-function newWorld(entityManager) {
-	return {
-		addEntity: entityManager.add.bind(entityManager),
-		destroyEntity: entityManager.destroy.bind(entityManager),
-		dispatchEvent: dispatchEvent.bind(entityManager)
-	};
 }
