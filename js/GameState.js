@@ -1,4 +1,3 @@
-/*eslint no-console: "off"*/
 
 import Player from 'Player';
 

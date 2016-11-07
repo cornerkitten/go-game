@@ -1,4 +1,3 @@
-/*eslint no-console: "off"*/
 
 // import GameState from 'GameState';
 import sprites from 'resources/sprites';

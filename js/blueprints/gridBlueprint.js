@@ -1,3 +1,4 @@
+
 import GridBehavior from 'behaviors/GridBehavior';
 
 export default {
