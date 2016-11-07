@@ -3,14 +3,6 @@ let _sourceFile = new WeakMap();
 let _isLoaded = new WeakMap();
 let _buffer = new WeakMap();
 
-function drawImageToBuffer(buffer, image) {
-	buffer.width = image.width;
-	buffer.height = image.height;
-
-	let ctx = buffer.getContext('2d');
-	ctx.drawImage(image, 0, 0, image.width, image.height);
-}
-
 export default class Sprite {
 	/**
 	 * `sourceFile` is optional
@@ -48,4 +40,12 @@ export default class Sprite {
 	set buffer(newBuffer) {
 		_buffer.set(this, newBuffer);
 	}
+}
+
+function drawImageToBuffer(buffer, image) {
+	buffer.width = image.width;
+	buffer.height = image.height;
+
+	let ctx = buffer.getContext('2d');
+	ctx.drawImage(image, 0, 0, image.width, image.height);
 }

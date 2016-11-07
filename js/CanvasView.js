@@ -2,10 +2,6 @@
 // Private properties for CanvasView
 let _ctx = new WeakMap();
 let _canvas = new WeakMap();
-function setCanvasSizeToWindow(canvas, windowHandle) {
-	canvas.width = parseInt(windowHandle.getComputedStyle(canvas).width);
-	canvas.height = parseInt(windowHandle.getComputedStyle(canvas).height);
-}
 
 export default class CanvasView {
 	// TODO Consider whether constructor should only have a single parameter
@@ -38,4 +34,9 @@ export default class CanvasView {
 		let canvas = _canvas.get(this);
 		_ctx.get(this).clearRect(0, 0, canvas.width, canvas.height);
 	}
+}
+
+function setCanvasSizeToWindow(canvas, windowHandle) {
+	canvas.width = parseInt(windowHandle.getComputedStyle(canvas).width);
+	canvas.height = parseInt(windowHandle.getComputedStyle(canvas).height);
 }

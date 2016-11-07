@@ -14,31 +14,6 @@ const observableEvents = [
 	'mousemove'
 ];
 
-function dispatchEvent(e) {
-	_entities.get(this).forEach((entity) => {
-		entity.dispatchEvent(e);
-	});
-}
-
-function drawEntities(view, entities) {
-	entities.forEach( (entity) => {
-		// TODO Check if entity has sprite
-		if (entity.spriteRenderer !== undefined) {
-			view.draw(entity.spriteRenderer, entity.transform);
-		}
-		drawEntities(view, entity.children);
-	});
-}
-
-// TODO Refactor world into its own class World
-function newWorld(entityManager) {
-	return {
-		addEntity: entityManager.add.bind(entityManager),
-		destroyEntity: entityManager.destroy.bind(entityManager),
-		dispatchEvent: dispatchEvent.bind(entityManager)
-	};
-}
-
 export default class EntityManager {
 	constructor(eventDispatcher) {
 		_entities.set(this, []);
@@ -74,4 +49,29 @@ export default class EntityManager {
 		});
 		_entitiesToDestroy.set(this, []);
 	}
+}
+
+function dispatchEvent(e) {
+	_entities.get(this).forEach((entity) => {
+		entity.dispatchEvent(e);
+	});
+}
+
+function drawEntities(view, entities) {
+	entities.forEach( (entity) => {
+		// TODO Check if entity has sprite
+		if (entity.spriteRenderer !== undefined) {
+			view.draw(entity.spriteRenderer, entity.transform);
+		}
+		drawEntities(view, entity.children);
+	});
+}
+
+// TODO Refactor world into its own class World
+function newWorld(entityManager) {
+	return {
+		addEntity: entityManager.add.bind(entityManager),
+		destroyEntity: entityManager.destroy.bind(entityManager),
+		dispatchEvent: dispatchEvent.bind(entityManager)
+	};
 }

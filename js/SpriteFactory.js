@@ -4,10 +4,6 @@ import Sprite from 'Sprite';
 // Private properties for CanvasSpriteFactory
 let _document = new WeakMap();
 
-function blankCanvas(documentHandle) {
-	return documentHandle.createElement('canvas');
-}
-
 export default class SpriteFactory {
 	// TODO Consider passing some sort of canvas factory, instead of
 	//      `documentHandle`, since canvas generation is all
@@ -36,4 +32,8 @@ export default class SpriteFactory {
 
 		return new Sprite(canvas);
 	}
+}
+
+function blankCanvas(documentHandle) {
+	return documentHandle.createElement('canvas');
 }

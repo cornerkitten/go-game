@@ -42,7 +42,6 @@ export default class GameEngine {
 		});
 	}
 
-	// TODO Rename to start()
 	start(boardSize) {
 		let gameBoard = _entityManager.get(this).add(boardBlueprint);
 		let boardSetupEvent = new CustomEvent('onSetup', {
