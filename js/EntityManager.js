@@ -1,12 +1,13 @@
 
 import Entity from 'Entity';
+import SpriteRenderer from 'components/SpriteRenderer';
+import Transform from 'components/Transform';
 
 let _entities = new WeakMap();
 let _eventDispatcher = new WeakMap();
 let _entitiesToDestroy = new WeakMap();
 let _world = new WeakMap();
 
-// TODO Consider whether Entity.dispatchEvent should be aware of this list.
 const observableEvents = [
 	'onPlaceStone',
 	'onCaptureStone',
@@ -59,9 +60,9 @@ function dispatchEvent(e) {
 
 function drawEntities(view, entities) {
 	entities.forEach( (entity) => {
-		// TODO Check if entity has sprite
-		if (entity.spriteRenderer !== undefined) {
-			view.draw(entity.spriteRenderer, entity.transform);
+		let spriteRenderer = entity.getComponent(SpriteRenderer);
+		if (spriteRenderer !== undefined) {
+			view.draw(spriteRenderer, entity.getComponent(Transform));
 		}
 		drawEntities(view, entity.children);
 	});

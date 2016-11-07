@@ -1,14 +1,16 @@
 
 import sprites from 'resources/sprites';
 import Player from 'Player';
+import Transform from 'components/Transform';
+import SpriteRenderer from 'components/SpriteRenderer';
 
 let _transform = new WeakMap();
 let _spriteRenderer = new WeakMap();
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
-		_transform.set(this, entity.transform);
-		_spriteRenderer.set(this, entity.spriteRenderer);
+		_transform.set(this, entity.getComponent(Transform));
+		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
 	}
 
 	onPlaceStone(e) {
