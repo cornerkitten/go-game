@@ -7,7 +7,7 @@ import CanvasView from 'CanvasView';
 import SpriteFactory from 'SpriteFactory';
 import EntityManager from 'EntityManager';
 import BoardBehavior from 'behaviors/BoardBehavior';
-import PreviewStoneBehavior from 'behaviors/PreviewStoneBehavior';
+import previewStoneBlueprint from 'blueprints/previewStoneBlueprint';
 
 // Private properties
 let _view = new WeakMap();
@@ -63,7 +63,6 @@ export default class GameEngine {
 				{
 					component: BoardBehavior,
 					params: {
-						entityManager: entityManager,
 						gameState: gameState
 					}
 				}
@@ -83,21 +82,7 @@ export default class GameEngine {
 		gameBoard.addChild(grid);
 		entityManager.add(gameBoard);
 
-		let previewStone = entityManager.create({
-			transform: {
-				x: 0,
-				y: 0
-			},
-			spriteRenderer: {
-				sprite: sprites.blackStone,
-				alpha: 0.64
-			},
-			behaviors: [
-				{
-					component: PreviewStoneBehavior
-				}
-			]
-		});
+		let previewStone = entityManager.create(previewStoneBlueprint);
 		entityManager.add(previewStone);
 
 		// TODO Consider refactoring as commands

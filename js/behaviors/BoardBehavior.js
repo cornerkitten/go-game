@@ -1,9 +1,6 @@
 
-import sprites from 'resources/sprites';
-import Player from 'Player';
-import StoneBehavior from 'StoneBehavior';
+import stoneBlueprint from 'blueprints/stoneBlueprint';
 
-let _entityManager = new WeakMap();
 let _gameState = new WeakMap();
 
 // TODO Consider accuracy of calculation, with respect to drawn grid
@@ -28,43 +25,30 @@ function viewToModelPos(x, y) {
 
 export default class BoardBehavior {
 	constructor(params) {
-		_entityManager.set(this, params.entityManager);
 		_gameState.set(this, params.gameState);
 	}
 
 	onPlaceStone(e) {
-		let sprite = sprites.blackStone;
-		if (e.detail.player === Player.WHITE) {
-			sprite = sprites.whiteStone;
-		}
-
 		let viewPos = modelToViewPos(e.detail.x, e.detail.y);
-
-		let stone = _entityManager.get(this).create({
-			transform: {
-				x: viewPos.x,
-				y: viewPos.y
-			},
-			spriteRenderer: {
-				sprite: sprite
-			},
-			behaviors: [
-				{
-					component: StoneBehavior,
-					params: {
-						entityManager: _entityManager.get(this),
-						boardPos: {
-							x: e.detail.x,
-							y: e.detail.y
-						}
-					}
-				}
-			]
-		});
 
 		// TODO Consider whether stones should be added as children to
 		//      this behavior's entity
-		_entityManager.get(this).add(stone);
+		let stone = this.world.addEntity(stoneBlueprint);
+
+		let setupEvent = new CustomEvent('onSetup', {
+			detail: {
+				viewPosition: {
+					x: viewPos.x,
+					y: viewPos.y
+				},
+				boardPosition: {
+					x: e.detail.x,
+					y: e.detail.y
+				},
+				player: e.detail.player
+			}
+		});
+		stone.dispatchEvent(setupEvent);
 	}
 
 	// TODO Consider refactoring as GestureTap (to encompass mouse and touch)

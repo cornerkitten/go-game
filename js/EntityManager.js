@@ -4,6 +4,9 @@ import Entity from 'Entity';
 let _entities = new WeakMap();
 let _eventDispatcher = new WeakMap();
 let _entitiesToDestroy = new WeakMap();
+let _world = new WeakMap();
+
+// TODO Consider whether Entity.dispatchEvent should be aware of this list.
 const observableEvents = [
 	'onPlaceStone',
 	'onCaptureStone',
@@ -27,19 +30,34 @@ function drawEntities(view, entities) {
 	});
 }
 
+function newWorld(entityManager) {
+	return {
+		addEntity: (entityBlueprint) => {
+			let entity = entityManager.create(entityBlueprint);
+			entityManager.add(entity);
+			return entity;
+		},
+		destroyEntity: (entity) => {
+			entityManager.destroy(entity);
+		}
+	};
+}
+
 export default class EntityManager {
 	constructor(eventDispatcher) {
 		_entities.set(this, []);
 		_entitiesToDestroy.set(this, []);
 		_eventDispatcher.set(this, eventDispatcher);
+		_world.set(this, newWorld(this));
 
 		observableEvents.forEach((eventName) => {
 			eventDispatcher.addEventListener(eventName, dispatchEvent.bind(this));
 		});
 	}
 
+	// TODO Refactor world into its own class World
 	create(entityConfig) {
-		return new Entity(entityConfig);
+		return new Entity(entityConfig, _world.get(this));
 	}
 
 	add(entity) {

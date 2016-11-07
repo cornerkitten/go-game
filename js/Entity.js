@@ -14,7 +14,7 @@ let _behaviors = new WeakMap();
 // TODO Add mechanism for components to communicate with other components of the
 //      same entity (e.g. behavior talks with sprite render to change sprite)
 export default class Entity {
-	constructor(config) {
+	constructor(config, world) {
 		_children.set(this, []);
 
 		if (config.transform !== undefined) {
@@ -27,12 +27,15 @@ export default class Entity {
 
 		_behaviors.set(this, []);
 		if (config.behaviors !== undefined) {
-			config.behaviors.forEach((behavior) => {
-				_behaviors.get(this).push(new behavior.component(behavior.params, this));
+			config.behaviors.forEach((behaviorConfig) => {
+				let behavior = new behaviorConfig.component(behaviorConfig.params, this);
+				behavior.world = world;
+				_behaviors.get(this).push(behavior);
 			});
 		}
 	}
 
+	// TODO Add child should be queued for adding, instead of immediately adding
 	addChild(entity) {
 		_children.get(this).push(entity);
 	}
