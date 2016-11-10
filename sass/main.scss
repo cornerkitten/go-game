@@ -16,9 +16,20 @@ body {
 
 #game-info {
 	margin: auto;
-	text-align: center;
-}
+	width: 100px;
 
-.current-player {
-	font-weight: bolder;
+	.player-info {
+		.stone {
+			display: inline;
+			height: 0.8em;
+		}
+
+		.player-name {
+			display: inline;
+		}
+	}
+
+	.current-player {
+		font-weight: bold;
+	}
 }
