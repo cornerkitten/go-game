@@ -5,7 +5,6 @@ import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
 let _entities = new WeakMap();
-let _eventDispatcher = new WeakMap();
 let _entitiesToDestroy = new WeakMap();
 let _world = new WeakMap();
 
@@ -20,8 +19,7 @@ export default class EntityManager {
 	constructor(eventDispatcher) {
 		_entities.set(this, []);
 		_entitiesToDestroy.set(this, []);
-		_eventDispatcher.set(this, eventDispatcher);
-		_world.set(this, new World(this));
+		_world.set(this, new World(this, eventDispatcher));
 
 		observableEvents.forEach((eventName) => {
 			eventDispatcher.addEventListener(eventName, this.dispatchEvent.bind(this));

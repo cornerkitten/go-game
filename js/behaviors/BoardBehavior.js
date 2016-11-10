@@ -66,6 +66,7 @@ export default class BoardBehavior {
 			}
 		});
 		this.world.dispatchEvent(event);
+
 		capturedChains.forEach((chain) => {
 			chain.stones.forEach((stone) => {
 				let captureEvent = new CustomEvent('onCaptureStone', {
@@ -77,6 +78,13 @@ export default class BoardBehavior {
 				this.world.dispatchEvent(captureEvent);
 			});
 		});
+
+		let newTurnEvent = new CustomEvent('onNewTurn', {
+			detail: {
+				player: _gameState.get(this).currentTurn
+			}
+		});
+		this.world.dispatchEvent(newTurnEvent);
 	}
 }
 

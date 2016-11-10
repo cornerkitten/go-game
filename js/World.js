@@ -1,9 +1,11 @@
 
 let _entityManager = new WeakMap();
+let _eventDispatcher = new WeakMap();
 
 export default class World {
-	constructor(entityManager) {
+	constructor(entityManager, eventDispatcher) {
 		_entityManager.set(this, entityManager);
+		_eventDispatcher.set(this, eventDispatcher);
 	}
 
 	addEntity(entity) {
@@ -15,6 +17,7 @@ export default class World {
 	}
 
 	dispatchEvent(e) {
+		_eventDispatcher.get(this).dispatchEvent(e);
 		_entityManager.get(this).dispatchEvent(e);
 	}
 }

@@ -1,13 +1,24 @@
 
 body {
 	background-color: #f9f9f9;
+	font-family: Helvetica, arial, sans-serif;
+	font-size: 1.5rem;
 }
 
 #game {
-	border: 3px dashed black;
+	// border: 3px dashed black;
 	// cursor: none;
 	display: block;
 	height: 576px;
 	margin: 0 auto;
 	width: 576px;
+}
+
+#game-info {
+	margin: auto;
+	text-align: center;
+}
+
+.current-player {
+	font-weight: bolder;
 }
