@@ -18,6 +18,5 @@ export default class World {
 
 	dispatchEvent(e) {
 		_eventDispatcher.get(this).dispatchEvent(e);
-		_entityManager.get(this).dispatchEvent(e);
 	}
 }

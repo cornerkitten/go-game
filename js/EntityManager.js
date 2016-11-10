@@ -33,7 +33,9 @@ export default class EntityManager {
 	}
 
 	destroy(entity) {
-		_entitiesToDestroy.get(this).push(entity);
+		if (_entitiesToDestroy.get(this).includes(entity) === false) {
+			_entitiesToDestroy.get(this).push(entity);
+		}
 	}
 
 	draw(view) {
