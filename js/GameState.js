@@ -26,11 +26,11 @@ export default class GameState {
 	// TODO Refactor so that method is smaller/simpler
 	placeStone(x, y) {
 		let board = _board.get(this);
+		let turn = _currentTurn.get(this);
 		if(hasPlayedAt(board, x, y)) {
 			return null;
 		}
 
-		let turn = _currentTurn.get(this);
 		board[x][y] = turn;
 
 		let newTurn = Player.BLACK;
@@ -38,14 +38,21 @@ export default class GameState {
 			newTurn = Player.WHITE;
 		}
 
-		let potentialCaptures = adjacentChains(board, x, y, newTurn);
+		let adjacentEnemyChains = adjacentChains(board, x, y, newTurn);
 		let capturedChains = [];
-		potentialCaptures.forEach((chain) => {
+		adjacentEnemyChains.forEach((chain) => {
 			if (chain.liberties.length === 0) {
 				captureStones(board, chain.stones);
 				capturedChains.push(chain);
 			}
 		});
+
+		let liberties = [];
+		chainAtPos(board, x, y, turn, [], liberties);
+		if (liberties.length === 0) {
+			board[x][y] = undefined;
+			return null;
+		}
 
 		_currentTurn.set(this, newTurn);
 
