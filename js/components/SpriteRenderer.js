@@ -6,7 +6,7 @@ let _alpha = new WeakMap();
 export default class SpriteRenderer {
 	constructor(sprite, alpha) {
 		_sprite.set(this, sprite);
-		
+
 		if (alpha === undefined) {
 			alpha = 1;
 		}
@@ -23,5 +23,9 @@ export default class SpriteRenderer {
 
 	get alpha() {
 		return _alpha.get(this);
+	}
+
+	set alpha(newAlpha) {
+		return _alpha.set(this, newAlpha);
 	}
 }

@@ -6,11 +6,13 @@ import SpriteRenderer from 'components/SpriteRenderer';
 
 let _transform = new WeakMap();
 let _spriteRenderer = new WeakMap();
+let _initialAlpha = new WeakMap();
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
 		_transform.set(this, entity.getComponent(Transform));
 		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
+		_initialAlpha.set(this, _spriteRenderer.get(this).alpha);
 	}
 
 	onPlaceStone(e) {
@@ -28,6 +30,14 @@ export default class PreviewStoneBehavior {
 
 		_transform.get(this).x = snappedViewPos.x;
 		_transform.get(this).y = snappedViewPos.y;
+	}
+
+	mouseleave() {
+		_spriteRenderer.get(this).alpha = 0;
+	}
+
+	mouseenter() {
+		_spriteRenderer.get(this).alpha = _initialAlpha.get(this);
 	}
 }
 
