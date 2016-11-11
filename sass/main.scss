@@ -16,7 +16,7 @@ body {
 
 #game-info {
 	margin: auto;
-	width: 100px;
+	width: 160px;
 
 	.player-info {
 		.stone {
@@ -25,6 +25,10 @@ body {
 		}
 
 		.player-name {
+			display: inline;
+		}
+
+		.captured-stones {
 			display: inline;
 		}
 	}

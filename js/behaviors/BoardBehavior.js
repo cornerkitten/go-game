@@ -71,6 +71,7 @@ export default class BoardBehavior {
 			chain.stones.forEach((stone) => {
 				let captureEvent = new CustomEvent('onCaptureStone', {
 					detail: {
+						captor: turn,
 						x: stone.x,
 						y: stone.y
 					}
