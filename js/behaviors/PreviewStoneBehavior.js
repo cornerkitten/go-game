@@ -7,12 +7,25 @@ import SpriteRenderer from 'components/SpriteRenderer';
 let _transform = new WeakMap();
 let _spriteRenderer = new WeakMap();
 let _initialAlpha = new WeakMap();
+let _cellSize = new WeakMap();
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
 		_transform.set(this, entity.getComponent(Transform));
 		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
 		_initialAlpha.set(this, _spriteRenderer.get(this).alpha);
+	}
+
+	onSetup(e) {
+		_cellSize.set(this, e.detail.cellSize);
+		let sprite = _spriteRenderer.get(this).sprite;
+		let origin = _spriteRenderer.get(this).origin;
+		origin.x = sprite.width / 2;
+		origin.y = sprite.height / 2;
+		
+		let transform = _transform.get(this);
+		transform.scaleX = e.detail.cellSize / sprite.width * 1.35;
+		transform.scaleY = e.detail.cellSize / sprite.height * 1.35;
 	}
 
 	onPlaceStone(e) {
@@ -25,8 +38,8 @@ export default class PreviewStoneBehavior {
 	}
 
 	mousemove(e) {
-		let modelPos = viewToModelPos(e.offsetX, e.offsetY);
-		let snappedViewPos = modelToViewPos(modelPos.x, modelPos.y);
+		let modelPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
+		let snappedViewPos = modelToViewPos(modelPos.x, modelPos.y, _cellSize.get(this));
 
 		_transform.get(this).x = snappedViewPos.x;
 		_transform.get(this).y = snappedViewPos.y;
@@ -42,19 +55,19 @@ export default class PreviewStoneBehavior {
 }
 
 // TODO Refactor into shared location
-function modelToViewPos(x, y) {
+function modelToViewPos(x, y, cellSize) {
 	return {
-		x: x * 64 - 12,
-		y: y * 64 - 12
+		x: x * cellSize + cellSize / 2,
+		y: y * cellSize + cellSize / 2
 	};
 }
 
 // TODO Refactor into shared location
-function viewToModelPos(x, y) {
+function viewToModelPos(x, y, cellSize) {
 	// TODO Consider accuracy of calculation, with respect to drawn grid
 	// TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
 	return {
-		x: Math.floor(x / 64),
-		y: Math.floor(y / 64)
+		x: Math.floor(x / cellSize),
+		y: Math.floor(y / cellSize)
 	};
 }

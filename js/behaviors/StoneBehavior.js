@@ -15,10 +15,19 @@ export default class StoneBehavior {
 		if (e.detail.player === Player.WHITE) {
 			sprite = sprites.whiteStone;
 		}
-		this.owner.getComponent(SpriteRenderer).sprite = sprite;
+		let spriteRenderer = this.owner.getComponent(SpriteRenderer);
+		spriteRenderer.sprite = sprite;
 
-		this.owner.getComponent(Transform).x = e.detail.viewPosition.x;
-		this.owner.getComponent(Transform).y = e.detail.viewPosition.y;
+		let transform = this.owner.getComponent(Transform);
+		transform.x = e.detail.viewPosition.x;
+		transform.y = e.detail.viewPosition.y;
+		transform.scaleX = e.detail.cellSize / sprite.width * 1.35;
+		transform.scaleY = e.detail.cellSize / sprite.height * 1.35;
+
+		let origin = spriteRenderer.origin;
+		origin.x = sprite.width / 2;
+		origin.y = sprite.height / 2;
+
 		_boardPos.set(this, e.detail.boardPosition);
 	}
 

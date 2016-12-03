@@ -43,9 +43,11 @@ export default class GameEngine {
 
 	start(boardSize) {
 		let gameBoard = _entityManager.get(this).add(boardBlueprint);
+		let view = _view.get(this);
 		let boardSetupEvent = new CustomEvent('onSetup', {
 			detail: {
 				boardSize: boardSize,
+				cellSize: view.width / boardSize,
 				spriteFactory: _spriteFactory.get(this)
 			}
 		});

@@ -2,6 +2,7 @@
 // Private properties
 let _sprite = new WeakMap();
 let _alpha = new WeakMap();
+let _origin = new WeakMap();
 
 export default class SpriteRenderer {
 	constructor(sprite, alpha) {
@@ -11,6 +12,7 @@ export default class SpriteRenderer {
 			alpha = 1;
 		}
 		_alpha.set(this, alpha);
+		_origin.set(this, {x: 0, y: 0});
 	}
 
 	get sprite() {
@@ -27,5 +29,9 @@ export default class SpriteRenderer {
 
 	set alpha(newAlpha) {
 		return _alpha.set(this, newAlpha);
+	}
+
+	get origin() {
+		return _origin.get(this);
 	}
 }

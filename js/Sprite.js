@@ -40,6 +40,14 @@ export default class Sprite {
 	set buffer(newBuffer) {
 		_buffer.set(this, newBuffer);
 	}
+
+	get width() {
+		return _buffer.get(this).width;
+	}
+
+	get height() {
+		return _buffer.get(this).height;
+	}
 }
 
 function drawImageToBuffer(buffer, image) {

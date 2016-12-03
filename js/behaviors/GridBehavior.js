@@ -7,7 +7,14 @@ export default class GridBehavior {
 
 	onSetup(e) {
 		let spriteRenderer = this.owner.getComponent(SpriteRenderer);
-		let sprite = e.detail.spriteFactory.squareGrid(32, 32, e.detail.boardSize, 64, 0.5, 'black');
+		let sprite = e.detail.spriteFactory.squareGrid(
+			e.detail.cellSize / 2,
+			e.detail.cellSize / 2,
+			e.detail.boardSize,
+			e.detail.cellSize,
+			0.5,
+			'black'
+		);
 		spriteRenderer.sprite = sprite;
 	}
 }

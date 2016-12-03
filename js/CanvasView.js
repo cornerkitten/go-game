@@ -26,13 +26,27 @@ export default class CanvasView {
 
 		ctx.save();
 		ctx.globalAlpha = spriteRenderer.alpha;
-		ctx.drawImage(canvas, transform.x, transform.y, canvas.width, canvas.height);
+		ctx.drawImage(
+			canvas,
+			transform.x - spriteRenderer.origin.x * transform.scaleX,
+			transform.y - spriteRenderer.origin.y * transform.scaleY,
+			canvas.width * transform.scaleX,
+			canvas.height * transform.scaleY
+		);
 		ctx.restore();
 	}
 
 	clear() {
 		let canvas = _canvas.get(this);
 		_ctx.get(this).clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	get width() {
+		return _canvas.get(this).width;
+	}
+
+	get height() {
+		return _canvas.get(this).height;
 	}
 }
 

@@ -1,8 +1,10 @@
 
 import stoneBlueprint from 'blueprints/stoneBlueprint';
 import GameState from 'GameState';
+import Transform from 'components/Transform';
 
 let _gameState = new WeakMap();
+let _cellSize = new WeakMap();
 
 export default class BoardBehavior {
 	constructor() {
@@ -10,6 +12,11 @@ export default class BoardBehavior {
 
 	onSetup(e) {
 		_gameState.set(this, new GameState(e.detail.boardSize));
+		_cellSize.set(this, e.detail.cellSize);
+
+		let transform = this.owner.getComponent(Transform);
+		transform.scaleX = 2; // TODO Accomodate for all devices
+		transform.scaleY = 2; // TODO Accomodate for all devices
 
 		// Sample setup
 		// gameState.placeStone(7, 7);
@@ -22,7 +29,7 @@ export default class BoardBehavior {
 	}
 
 	onPlaceStone(e) {
-		let viewPos = modelToViewPos(e.detail.x, e.detail.y);
+		let viewPos = modelToViewPos(e.detail.x, e.detail.y, _cellSize.get(this));
 
 		// TODO Consider whether stones should be added as children to
 		//      this behavior's entity
@@ -38,6 +45,7 @@ export default class BoardBehavior {
 					x: e.detail.x,
 					y: e.detail.y
 				},
+				cellSize: _cellSize.get(this),
 				player: e.detail.player
 			}
 		});
@@ -46,7 +54,7 @@ export default class BoardBehavior {
 
 	// TODO Consider refactoring as GestureTap (to encompass mouse and touch)
 	click(e) {
-		let modelPos = viewToModelPos(e.offsetX, e.offsetY);
+		let modelPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
 		let gameState = _gameState.get(this);
 		let turn = gameState.currentTurn;
 
@@ -92,19 +100,19 @@ export default class BoardBehavior {
 // TODO Consider accuracy of calculation, with respect to drawn grid
 // TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
 // TODO Refactor into shared location
-function modelToViewPos(x, y) {
+function modelToViewPos(x, y, cellSize) {
 	return {
-		x: x * 64 - 12,
-		y: y * 64 - 12
+		x: x * cellSize + cellSize / 2,
+		y: y * cellSize + cellSize / 2
 	};
 }
 
 // TODO Refactor into shared location
-function viewToModelPos(x, y) {
+function viewToModelPos(x, y, cellSize) {
 	// TODO Consider accuracy of calculation, with respect to drawn grid
 	// TODO Generalize calculation to any board size (e.g. 13 x 13, 19 x19)
 	return {
-		x: Math.floor(x / 64),
-		y: Math.floor(y / 64)
+		x: Math.floor(x / cellSize),
+		y: Math.floor(y / cellSize)
 	};
 }
