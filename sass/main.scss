@@ -1,10 +1,15 @@
 
-$board-size: 60vh;
+$board-size: 80vmin;
 $view-width: 576px; // Previous prototyping size: 576px;
-$game-info-padding-horizontal: 2vh;
-$game-info-width: $board-size - 4vh - 2 * $game-info-padding-horizontal;
+$game-info-padding-horizontal: 2vmin;
+$game-info-width: $board-size - 4vmin - 2 * $game-info-padding-horizontal;
 $game-info-padding: (2 * $game-info-padding-horizontal) $game-info-padding-horizontal;
 $medium-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+
+html {
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+}
 
 body {
 	background-color: hsl(0, 0, 74%);
