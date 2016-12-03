@@ -1,8 +1,8 @@
 
 $board-size: 60vh;
 $view-width: 576px; // Previous prototyping size: 576px;
-$game-info-padding-horizontal: 16px;
-$game-info-width: $view-width - 32px - $game-info-padding-horizontal;
+$game-info-padding-horizontal: 2vh;
+$game-info-width: $board-size - 4vh - 2 * $game-info-padding-horizontal;
 $game-info-padding: (2 * $game-info-padding-horizontal) $game-info-padding-horizontal;
 $medium-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 
@@ -35,6 +35,10 @@ body {
 		height: $board-size;
 		margin: 1em auto;
 		width: $board-size;
+
+		// TODO Determine if better approach should be applied to handle
+		//      tap-flicker concern on safari mobile
+		-webkit-tap-highlight-color: hsla(0, 0, 0, 0);
 	}
 }
 
