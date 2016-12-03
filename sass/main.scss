@@ -1,26 +1,53 @@
 
+$board-size: 576px;
+$view-width: 576px; // Previous prototyping size: 576px;
+$game-info-padding-horizontal: 16px;
+$game-info-width: $view-width - 32px - $game-info-padding-horizontal;
+$game-info-padding: (2 * $game-info-padding-horizontal) $game-info-padding-horizontal;
+$medium-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+
 body {
-	background-color: #f9f9f9;
-	font-family: Helvetica, arial, sans-serif;
+	background-color: hsl(0, 0, 74%);
+	font-family: Futura, Helvetica, arial, sans-serif;
 	font-size: 1.5rem;
+	margin: 0;
 }
 
-#game {
-	// border: 3px dashed black;
-	// cursor: none;
-	display: block;
-	height: 576px;
-	margin: 0 auto;
-	width: 576px;
+#main-bar {
+	background-color: hsl(0, 0, 89%);
+	box-shadow: $medium-box-shadow;
+	height: 3rem;
+	width: 100%;
+}
+
+#primary-surface {
+	background-color: hsl(0, 0, 82%);
+	box-shadow: $medium-box-shadow;
+	padding: 0 0 1rem 0;
+	position: relative;
+	top: 0;
+
+	#game {
+		box-shadow: $medium-box-shadow;
+		// border: 3px dashed black;
+		// cursor: none;
+		display: block;
+		height: $board-size;
+		margin: 1em auto;
+		width: $board-size;
+	}
 }
 
 #game-info {
-	margin: auto;
-	width: 160px;
+	background-color: hsl(0, 0, 82%);
+	box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+	margin: 1rem auto;
+	padding: $game-info-padding;
+	width: $game-info-width;
 
 	.player-info {
 		.stone {
-			display: inline;
+			display: none;
 			height: 0.8em;
 		}
 
@@ -33,7 +60,7 @@ body {
 		}
 	}
 
-	.current-player {
+	.current-player .player-name {
 		font-weight: bold;
 	}
 }

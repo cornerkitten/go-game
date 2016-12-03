@@ -7,19 +7,24 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 <body>
-	<div id="game-info">
-		<div class="player-info player-1">
-			<img class="stone" src="img/go-stone-black.png" alt="Player 1 (Black Stones)" />
-			<div class="player-name">Kida</div>
-			<div class="captured-stones">0</div>
+	<div id="app">
+		<div id="primary-surface">
+			<nav id="main-bar"></nav>
+			<canvas id="game"></canvas>
 		</div>
-		<div class="player-info player-2">
-			<img class="stone" src="img/go-stone-white.png" alt="Player 2 (White Stones)" />
-			<div class="player-name">Milo</div>
-			<div class="captured-stones">0</div>
+		<div id="game-info">
+			<div class="player-info player-1">
+				<img class="stone" src="img/go-stone-black.png" alt="Player 1 (Black Stones)" />
+				<div class="player-name">Kida</div>
+				<div class="captured-stones">0</div>
+			</div>
+			<div class="player-info player-2">
+				<img class="stone" src="img/go-stone-white.png" alt="Player 2 (White Stones)" />
+				<div class="player-name">Milo</div>
+				<div class="captured-stones">0</div>
+			</div>
 		</div>
 	</div>
-	<canvas id="game"></canvas>
 	<script type="text/javascript" src="js/app.js"></script>
 </body>
 </html>
