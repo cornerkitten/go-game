@@ -22,10 +22,11 @@ export default class PreviewStoneBehavior {
 		let origin = _spriteRenderer.get(this).origin;
 		origin.x = sprite.width / 2;
 		origin.y = sprite.height / 2;
-		
+
 		let transform = _transform.get(this);
-		transform.scaleX = e.detail.cellSize / sprite.width * 1.35;
-		transform.scaleY = e.detail.cellSize / sprite.height * 1.35;
+		transform.scaleX = e.detail.cellSize / sprite.width * 0.95;
+		transform.scaleY = e.detail.cellSize / sprite.height * 0.95;
+		_spriteRenderer.get(this).alpha = 0;
 	}
 
 	onPlaceStone(e) {

@@ -12,7 +12,7 @@ export default class GridBehavior {
 			e.detail.cellSize / 2,
 			e.detail.boardSize,
 			e.detail.cellSize,
-			0.5,
+			1,
 			'black'
 		);
 		spriteRenderer.sprite = sprite;

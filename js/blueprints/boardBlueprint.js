@@ -1,5 +1,4 @@
 
-import sprites from 'resources/sprites';
 import BoardBehavior from 'behaviors/BoardBehavior';
 import gridBlueprint from 'blueprints/gridBlueprint';
 import previewStoneBlueprint from 'blueprints/previewStoneBlueprint';
@@ -10,7 +9,7 @@ export default {
 		y: 0
 	},
 	spriteRenderer: {
-		sprite: sprites.gameBoard
+		// sprite: sprites.gameBoard
 	},
 	behaviors: [
 		{

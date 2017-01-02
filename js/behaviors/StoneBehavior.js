@@ -21,8 +21,8 @@ export default class StoneBehavior {
 		let transform = this.owner.getComponent(Transform);
 		transform.x = e.detail.viewPosition.x;
 		transform.y = e.detail.viewPosition.y;
-		transform.scaleX = e.detail.cellSize / sprite.width * 1.35;
-		transform.scaleY = e.detail.cellSize / sprite.height * 1.35;
+		transform.scaleX = e.detail.cellSize / sprite.width * 0.95;
+		transform.scaleY = e.detail.cellSize / sprite.height * 0.95;
 
 		let origin = spriteRenderer.origin;
 		origin.x = sprite.width / 2;
