@@ -21,7 +21,8 @@ gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function()
 	gulp.watch('sass/**/*.scss', ['styles']);
 	gulp.watch('js/**/*.js', ['lint', 'scripts']);
 	browserSync.init({
-		server: './dist'
+		server: './dist',
+		notify: false
 	});
 	gulp.watch('dist/index.html').on('change', browserSync.reload);
 	gulp.watch('dist/js/**/*.js').on('change', browserSync.reload);
