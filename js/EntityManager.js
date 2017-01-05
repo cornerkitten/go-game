@@ -15,6 +15,7 @@ const observableEvents = [
 	'mousemove',
 	'mouseenter',
 	'mouseleave',
+	'onStep',
 ];
 
 export default class EntityManager {
@@ -52,6 +53,9 @@ export default class EntityManager {
 			_entities.get(this).splice(index, 1);
 		});
 		_entitiesToDestroy.set(this, []);
+
+		let stepEvent = new CustomEvent('onStep');
+		this.dispatchEvent(stepEvent);
 	}
 
 	dispatchEvent(e) {

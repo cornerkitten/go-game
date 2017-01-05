@@ -1,3 +1,4 @@
+/*eslint no-console: "off" */
 
 import sprites from 'resources/sprites';
 import Player from 'Player';
@@ -8,12 +9,15 @@ let _transform = new WeakMap();
 let _spriteRenderer = new WeakMap();
 let _initialAlpha = new WeakMap();
 let _cellSize = new WeakMap();
+let _initialScale = new WeakMap();
+let _isGrowing = new WeakMap();
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
 		_transform.set(this, entity.getComponent(Transform));
 		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
 		_initialAlpha.set(this, _spriteRenderer.get(this).alpha);
+		_isGrowing.set(this, true);
 	}
 
 	onSetup(e) {
@@ -24,8 +28,11 @@ export default class PreviewStoneBehavior {
 		origin.y = sprite.height / 2;
 
 		let transform = _transform.get(this);
-		transform.scaleX = e.detail.cellSize / sprite.width * 0.95;
-		transform.scaleY = e.detail.cellSize / sprite.height * 0.95;
+		let initialScale = e.detail.cellSize / sprite.width * 0.95;
+		_initialScale.set(this, initialScale);
+
+		transform.scaleX = initialScale;
+		transform.scaleY = initialScale;
 		_spriteRenderer.get(this).alpha = 0;
 	}
 
@@ -52,6 +59,31 @@ export default class PreviewStoneBehavior {
 
 	mouseenter() {
 		_spriteRenderer.get(this).alpha = _initialAlpha.get(this);
+	}
+
+	onStep() {
+		let transform = _transform.get(this);
+		let initialScale = _initialScale.get(this);
+		let scale = transform.scaleX;
+		let scalerDelta = 0.003;
+		let maxScale = initialScale + 0.09;
+
+		if (_isGrowing.get(this)) {
+			scale += scalerDelta;
+		} else {
+			scale -= scalerDelta;
+		}
+
+		if (scale > maxScale) {
+			scale = maxScale;
+			_isGrowing.set(this, false);
+		} else if (scale < initialScale) {
+			scale = initialScale;
+			_isGrowing.set(this, true);
+		}
+
+		transform.scaleX = scale;
+		transform.scaleY = scale;
 	}
 }
 
