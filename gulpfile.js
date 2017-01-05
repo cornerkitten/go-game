@@ -18,6 +18,7 @@ const buffer = require('vinyl-buffer');
 gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function() {
 	gulp.watch('./*.html', ['html']);
 	gulp.watch('img/**/*.png', ['images']);
+	gulp.watch('img/**/*.svg', ['images']);
 	gulp.watch('sass/**/*.scss', ['styles']);
 	gulp.watch('js/**/*.js', ['lint', 'scripts']);
 	browserSync.init({
@@ -28,6 +29,7 @@ gulp.task('default', ['html', 'images', 'styles', 'lint', 'scripts'], function()
 	gulp.watch('dist/js/**/*.js').on('change', browserSync.reload);
 	gulp.watch('dist/css/**/*.css').on('change', browserSync.reload);
 	gulp.watch('dist/img/**/*.png').on('change', browserSync.reload);
+	gulp.watch('dist/img/**/*.svg').on('change', browserSync.reload);
 });
 
 gulp.task('html', function() {
@@ -36,7 +38,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('images', function() {
-	gulp.src(['img/**/*.png'])
+	gulp.src(['img/**/*.png', 'img/**/*.svg'])
 		.pipe(gulp.dest('dist/img'));
 });
 
@@ -55,11 +57,10 @@ gulp.task('lint', function() {
 
 gulp.task('scripts', function() {
 	return rollup({
-			entry: 'js/app.js',
-			plugins: [
-				rollupIncludePaths({paths: ['js']})
-			]
-		})
+		entry: 'js/app.js',
+		plugins: [
+			rollupIncludePaths({paths: ['js']})
+		]})
 		.pipe(source('app.js'))
 		.pipe(buffer())
 		.pipe(babel({
