@@ -9,7 +9,7 @@ export default {
 	},
 	spriteRenderer: {
 		sprite: sprites.blackStone,
-		alpha: 0.64
+		alpha: 0.84,
 	},
 	behaviors: [
 		{
