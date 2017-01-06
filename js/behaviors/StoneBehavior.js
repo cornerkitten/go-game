@@ -5,9 +5,11 @@ import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
 let _boardPos = new WeakMap();
+let _isBeingCaptured = new WeakMap();
 
 export default class StoneBehavior {
 	constructor() {
+		_isBeingCaptured.set(this, false);
 	}
 
 	onSetup(e) {
@@ -34,7 +36,20 @@ export default class StoneBehavior {
 	onCaptureStone(e) {
 		let myPos = _boardPos.get(this);
 		if (e.detail.x === myPos.x && e.detail.y === myPos.y) {
-			this.world.destroyEntity(this.owner);
+			_isBeingCaptured.set(this, true);
+		}
+	}
+
+	onStep() {
+		if (_isBeingCaptured.get(this)) {
+			let transform = this.owner.getComponent(Transform);
+			let scaleDelta = -0.1;
+			transform.scaleX += scaleDelta;
+			transform.scaleY += scaleDelta;
+
+			if (transform.scaleX < 0) {
+				this.world.destroyEntity(this.owner);
+			}
 		}
 	}
 }
