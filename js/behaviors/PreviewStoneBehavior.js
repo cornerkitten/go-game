@@ -11,6 +11,8 @@ let _initialAlpha = new WeakMap();
 let _cellSize = new WeakMap();
 let _initialScale = new WeakMap();
 let _isGrowing = new WeakMap();
+let _boardPosition = new WeakMap();
+let _invalidMoveTweenCounter = new WeakMap();
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
@@ -18,6 +20,7 @@ export default class PreviewStoneBehavior {
 		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
 		_initialAlpha.set(this, _spriteRenderer.get(this).alpha);
 		_isGrowing.set(this, true);
+		_invalidMoveTweenCounter.set(this, 0);
 	}
 
 	onSetup(e) {
@@ -46,11 +49,13 @@ export default class PreviewStoneBehavior {
 	}
 
 	mousemove(e) {
-		let modelPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
-		let snappedViewPos = modelToViewPos(modelPos.x, modelPos.y, _cellSize.get(this));
+		let boardPos = _boardPosition.get(this);
+		let newBoardPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
 
-		_transform.get(this).x = snappedViewPos.x;
-		_transform.get(this).y = snappedViewPos.y;
+		if (boardPos === undefined || boardPos.x !== newBoardPos.x || boardPos.y !== newBoardPos.y) {
+			updateViewPosition(_transform.get(this), newBoardPos, _cellSize.get(this));
+			_boardPosition.set(this, newBoardPos);
+		}
 	}
 
 	mouseleave() {
@@ -59,6 +64,10 @@ export default class PreviewStoneBehavior {
 
 	mouseenter() {
 		_spriteRenderer.get(this).alpha = _initialAlpha.get(this);
+	}
+
+	onInvalidPlaceStone() {
+		_invalidMoveTweenCounter.set(this, 1);
 	}
 
 	onStep() {
@@ -82,6 +91,19 @@ export default class PreviewStoneBehavior {
 			_isGrowing.set(this, true);
 		}
 
+		// Prototype for invalid move feedback
+		// TODO Fix bug for how alpha is handled upon animation completion
+		// TODO Fix bug where animation needs immediately stopped when
+		//      preview stone is made to disappear (e.g. when onMouseOut is
+    //      fired)
+		let invalidMoveTweenCounter = _invalidMoveTweenCounter.get(this);
+		if (invalidMoveTweenCounter > 0) {
+			invalidMoveTweenCounter -= 0.05;
+			_spriteRenderer.get(this).alpha = _initialAlpha.get(this) * invalidMoveTweenCounter;
+
+			_invalidMoveTweenCounter.set(this, invalidMoveTweenCounter);
+		}
+
 		transform.scaleX = scale;
 		transform.scaleY = scale;
 	}
@@ -103,4 +125,10 @@ function viewToModelPos(x, y, cellSize) {
 		x: Math.floor(x / cellSize),
 		y: Math.floor(y / cellSize)
 	};
+}
+
+function updateViewPosition(transform, boardPos, cellSize) {
+	let snappedViewPos = modelToViewPos(boardPos.x, boardPos.y, cellSize);
+	transform.x = snappedViewPos.x;
+	transform.y = snappedViewPos.y;
 }

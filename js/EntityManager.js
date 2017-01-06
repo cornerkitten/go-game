@@ -16,6 +16,7 @@ const observableEvents = [
 	'mouseenter',
 	'mouseleave',
 	'onStep',
+	'onInvalidPlaceStone',
 ];
 
 export default class EntityManager {

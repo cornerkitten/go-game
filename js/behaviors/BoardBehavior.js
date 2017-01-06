@@ -63,6 +63,14 @@ export default class BoardBehavior {
 
 		// Move is illegal
 		if (capturedChains == null) {
+			let event = new CustomEvent('onInvalidPlaceStone', {
+				detail: {
+					x: modelPos,
+					y: modelPos
+				}
+			});
+			this.world.dispatchEvent(event);
+			
 			return;
 		}
 
