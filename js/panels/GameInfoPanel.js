@@ -2,9 +2,9 @@
 
 import Player from 'Player';
 
-let panelElement_ = Symbol('panelElement');
-let gameElement_ = Symbol('gameElement');
-let captures_ = Symbol('captures');
+const panelElement_ = Symbol('panelElement');
+const gameElement_ = Symbol('gameElement');
+const captures_ = Symbol('captures');
 
 export default class GameInfoPanel {
 	constructor(panelElement, gameElement) {

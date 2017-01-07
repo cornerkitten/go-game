@@ -4,8 +4,8 @@ import Player from 'Player';
 import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
-let boardPos_ = Symbol('boardPos');
-let isBeingCaptured_ = Symbol('isBeingCaptured');
+const boardPos_ = Symbol('boardPos');
+const isBeingCaptured_ = Symbol('isBeingCaptured');
 
 export default class StoneBehavior {
 	constructor() {

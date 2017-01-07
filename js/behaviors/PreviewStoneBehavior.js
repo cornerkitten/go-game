@@ -5,14 +5,14 @@ import Player from 'Player';
 import Transform from 'components/Transform';
 import SpriteRenderer from 'components/SpriteRenderer';
 
-let transform_ = Symbol('transform');
-let spriteRenderer_ = Symbol('spriteRenderer');
-let initialAlpha_ = Symbol('initialAlpha');
-let cellSize_ = Symbol('cellSize');
-let initialScale_ = Symbol('initialScale');
-let isGrowing_ = Symbol('isGrowing');
-let boardPosition_ = Symbol('boardPosition');
-let invalidMoveTweenCounter_ = Symbol('invalidMoveTweenCounter');
+const transform_ = Symbol('transform');
+const spriteRenderer_ = Symbol('spriteRenderer');
+const initialAlpha_ = Symbol('initialAlpha');
+const cellSize_ = Symbol('cellSize');
+const initialScale_ = Symbol('initialScale');
+const isGrowing_ = Symbol('isGrowing');
+const boardPosition_ = Symbol('boardPosition');
+const invalidMoveTweenCounter_ = Symbol('invalidMoveTweenCounter');
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){

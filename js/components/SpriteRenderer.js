@@ -1,8 +1,8 @@
 
 // Private properties
-let sprite_ = Symbol('sprite');
-let alpha_ = Symbol('alpha');
-let origin_ = Symbol('origin');
+const sprite_ = Symbol('sprite');
+const alpha_ = Symbol('alpha');
+const origin_ = Symbol('origin');
 
 export default class SpriteRenderer {
 	constructor(sprite, alpha) {

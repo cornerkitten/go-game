@@ -3,8 +3,8 @@ import stoneBlueprint from 'blueprints/stoneBlueprint';
 import GameState from 'GameState';
 import Transform from 'components/Transform';
 
-let gameState_ = Symbol('gameState');
-let cellSize_ = Symbol('cellSize');
+const gameState_ = Symbol('gameState');
+const cellSize_ = Symbol('cellSize');
 
 export default class BoardBehavior {
 	constructor() {
