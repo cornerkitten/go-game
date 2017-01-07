@@ -55,7 +55,7 @@ export default class PreviewStoneBehavior {
 
 		if (this[boardPosition_] === undefined || this[boardPosition_].x !== newBoardPos.x || this[boardPosition_].y !== newBoardPos.y) {
 			updateViewPosition(this[transform_], newBoardPos, this[cellSize_]);
-			this[boardPosition_].set(this, newBoardPos);
+			this[boardPosition_] = newBoardPos;
 		}
 	}
 
