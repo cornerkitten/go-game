@@ -5,38 +5,40 @@ import Player from 'Player';
 import Transform from 'components/Transform';
 import SpriteRenderer from 'components/SpriteRenderer';
 
-let _transform = new WeakMap();
-let _spriteRenderer = new WeakMap();
-let _initialAlpha = new WeakMap();
-let _cellSize = new WeakMap();
-let _initialScale = new WeakMap();
-let _isGrowing = new WeakMap();
-let _boardPosition = new WeakMap();
-let _invalidMoveTweenCounter = new WeakMap();
+let transform_ = Symbol('transform');
+let spriteRenderer_ = Symbol('spriteRenderer');
+let initialAlpha_ = Symbol('initialAlpha');
+let cellSize_ = Symbol('cellSize');
+let initialScale_ = Symbol('initialScale');
+let isGrowing_ = Symbol('isGrowing');
+let boardPosition_ = Symbol('boardPosition');
+let invalidMoveTweenCounter_ = Symbol('invalidMoveTweenCounter');
 
 export default class PreviewStoneBehavior {
 	constructor(params, entity){
-		_transform.set(this, entity.getComponent(Transform));
-		_spriteRenderer.set(this, entity.getComponent(SpriteRenderer));
-		_initialAlpha.set(this, _spriteRenderer.get(this).alpha);
-		_isGrowing.set(this, true);
-		_invalidMoveTweenCounter.set(this, 0);
+		this[transform_] = entity.getComponent(Transform);
+		this[spriteRenderer_] = entity.getComponent(SpriteRenderer);
+		this[initialAlpha_] = this[spriteRenderer_].alpha;
+		this[cellSize_] = undefined;
+		this[initialScale_] = undefined;
+		this[isGrowing_] = true;
+		this[boardPosition_] = undefined;
+		this[invalidMoveTweenCounter_] = 0;
 	}
 
 	onSetup(e) {
-		_cellSize.set(this, e.detail.cellSize);
-		let sprite = _spriteRenderer.get(this).sprite;
-		let origin = _spriteRenderer.get(this).origin;
+		this[cellSize_] = e.detail.cellSize;
+		let sprite = this[spriteRenderer_].sprite;
+		let origin = this[spriteRenderer_].origin;
 		origin.x = sprite.width / 2;
 		origin.y = sprite.height / 2;
 
-		let transform = _transform.get(this);
 		let initialScale = e.detail.cellSize / sprite.width * 0.95;
-		_initialScale.set(this, initialScale);
+		this[initialScale_] = initialScale;
 
-		transform.scaleX = initialScale;
-		transform.scaleY = initialScale;
-		_spriteRenderer.get(this).alpha = 0;
+		this[transform_].scaleX = initialScale;
+		this[transform_].scaleY = initialScale;
+		this[spriteRenderer_].alpha = 0;
 	}
 
 	onPlaceStone(e) {
@@ -45,39 +47,36 @@ export default class PreviewStoneBehavior {
 			sprite = sprites.blackStone;
 		}
 
-		_spriteRenderer.get(this).sprite = sprite;
+		this[spriteRenderer_].sprite = sprite;
 	}
 
 	mousemove(e) {
-		let boardPos = _boardPosition.get(this);
-		let newBoardPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
+		let newBoardPos = viewToModelPos(e.offsetX, e.offsetY, this[cellSize_]);
 
-		if (boardPos === undefined || boardPos.x !== newBoardPos.x || boardPos.y !== newBoardPos.y) {
-			updateViewPosition(_transform.get(this), newBoardPos, _cellSize.get(this));
-			_boardPosition.set(this, newBoardPos);
+		if (this[boardPosition_] === undefined || this[boardPosition_].x !== newBoardPos.x || this[boardPosition_].y !== newBoardPos.y) {
+			updateViewPosition(this[transform_], newBoardPos, this[cellSize_]);
+			this[boardPosition_].set(this, newBoardPos);
 		}
 	}
 
 	mouseleave() {
-		_spriteRenderer.get(this).alpha = 0;
+		this[spriteRenderer_].alpha = 0;
 	}
 
 	mouseenter() {
-		_spriteRenderer.get(this).alpha = _initialAlpha.get(this);
+		this[spriteRenderer_].alpha = this[initialAlpha_];
 	}
 
 	onInvalidPlaceStone() {
-		_invalidMoveTweenCounter.set(this, 1);
+		this[invalidMoveTweenCounter_] = 1;
 	}
 
 	onStep() {
-		let transform = _transform.get(this);
-		let initialScale = _initialScale.get(this);
-		let scale = transform.scaleX;
+		let scale = this[transform_].scaleX;
 		let scalerDelta = 0.003;
-		let maxScale = initialScale + 0.09;
+		let maxScale = this[initialScale_] + 0.09;
 
-		if (_isGrowing.get(this)) {
+		if (this[isGrowing_]) {
 			scale += scalerDelta;
 		} else {
 			scale -= scalerDelta;
@@ -85,10 +84,10 @@ export default class PreviewStoneBehavior {
 
 		if (scale > maxScale) {
 			scale = maxScale;
-			_isGrowing.set(this, false);
-		} else if (scale < initialScale) {
-			scale = initialScale;
-			_isGrowing.set(this, true);
+			this[isGrowing_] = false;
+		} else if (scale < this[initialScale_]) {
+			scale = this[initialScale_];
+			this[isGrowing_] = true;
 		}
 
 		// Prototype for invalid move feedback
@@ -96,16 +95,13 @@ export default class PreviewStoneBehavior {
 		// TODO Fix bug where animation needs immediately stopped when
 		//      preview stone is made to disappear (e.g. when onMouseOut is
     //      fired)
-		let invalidMoveTweenCounter = _invalidMoveTweenCounter.get(this);
-		if (invalidMoveTweenCounter > 0) {
-			invalidMoveTweenCounter -= 0.05;
-			_spriteRenderer.get(this).alpha = _initialAlpha.get(this) * invalidMoveTweenCounter;
-
-			_invalidMoveTweenCounter.set(this, invalidMoveTweenCounter);
+		if (this[invalidMoveTweenCounter_] > 0) {
+			this[invalidMoveTweenCounter_] -= 0.05;
+			this[spriteRenderer_].alpha = this[initialAlpha_] * this[invalidMoveTweenCounter_];
 		}
 
-		transform.scaleX = scale;
-		transform.scaleY = scale;
+		this[transform_].scaleX = scale;
+		this[transform_].scaleY = scale;
 	}
 }
 
