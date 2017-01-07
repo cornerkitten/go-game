@@ -4,12 +4,13 @@ import Player from 'Player';
 import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
-let _boardPos = new WeakMap();
-let _isBeingCaptured = new WeakMap();
+let boardPos_ = Symbol('boardPos');
+let isBeingCaptured_ = Symbol('isBeingCaptured');
 
 export default class StoneBehavior {
 	constructor() {
-		_isBeingCaptured.set(this, false);
+		this[isBeingCaptured_] = false;
+		this[boardPos_] = undefined;
 	}
 
 	onSetup(e) {
@@ -30,18 +31,17 @@ export default class StoneBehavior {
 		origin.x = sprite.width / 2;
 		origin.y = sprite.height / 2;
 
-		_boardPos.set(this, e.detail.boardPosition);
+		this[boardPos_] = e.detail.boardPosition;
 	}
 
 	onCaptureStone(e) {
-		let myPos = _boardPos.get(this);
-		if (e.detail.x === myPos.x && e.detail.y === myPos.y) {
-			_isBeingCaptured.set(this, true);
+		if (e.detail.x === this[boardPos_].x && e.detail.y === this[boardPos_].y) {
+			this[isBeingCaptured_] = true;
 		}
 	}
 
 	onStep() {
-		if (_isBeingCaptured.get(this)) {
+		if (this[isBeingCaptured_]) {
 			let transform = this.owner.getComponent(Transform);
 			let scaleDelta = -0.1;
 			transform.scaleX += scaleDelta;
