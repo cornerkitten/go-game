@@ -3,16 +3,18 @@ import stoneBlueprint from 'blueprints/stoneBlueprint';
 import GameState from 'GameState';
 import Transform from 'components/Transform';
 
-let _gameState = new WeakMap();
-let _cellSize = new WeakMap();
+let gameState_ = Symbol('gameState');
+let cellSize_ = Symbol('cellSize');
 
 export default class BoardBehavior {
 	constructor() {
+		this[cellSize_] = undefined;
+		this[gameState_] = undefined;
 	}
 
 	onSetup(e) {
-		_gameState.set(this, new GameState(e.detail.boardSize));
-		_cellSize.set(this, e.detail.cellSize);
+		this[gameState_] = new GameState(e.detail.boardSize);
+		this[cellSize_] = e.detail.cellSize;
 
 		let transform = this.owner.getComponent(Transform);
 		transform.scaleX = 2; // TODO Accomodate for all devices
@@ -29,7 +31,7 @@ export default class BoardBehavior {
 	}
 
 	onPlaceStone(e) {
-		let viewPos = modelToViewPos(e.detail.x, e.detail.y, _cellSize.get(this));
+		let viewPos = modelToViewPos(e.detail.x, e.detail.y, this[cellSize_]);
 
 		// TODO Consider whether stones should be added as children to
 		//      this behavior's entity
@@ -45,7 +47,7 @@ export default class BoardBehavior {
 					x: e.detail.x,
 					y: e.detail.y
 				},
-				cellSize: _cellSize.get(this),
+				cellSize: this[cellSize_],
 				player: e.detail.player
 			}
 		});
@@ -54,12 +56,11 @@ export default class BoardBehavior {
 
 	// TODO Consider refactoring as GestureTap (to encompass mouse and touch)
 	click(e) {
-		let modelPos = viewToModelPos(e.offsetX, e.offsetY, _cellSize.get(this));
-		let gameState = _gameState.get(this);
-		let turn = gameState.currentTurn;
+		let modelPos = viewToModelPos(e.offsetX, e.offsetY, this[cellSize_]);
+		let turn = this[gameState_].currentTurn;
 
 		// TODO Make sure that stone is only for legal moves
-		let capturedChains = gameState.placeStone(modelPos.x, modelPos.y);
+		let capturedChains = this[gameState_].placeStone(modelPos.x, modelPos.y);
 
 		// Move is illegal
 		if (capturedChains == null) {
@@ -70,7 +71,7 @@ export default class BoardBehavior {
 				}
 			});
 			this.world.dispatchEvent(event);
-			
+
 			return;
 		}
 
@@ -98,7 +99,7 @@ export default class BoardBehavior {
 
 		let newTurnEvent = new CustomEvent('onNewTurn', {
 			detail: {
-				player: _gameState.get(this).currentTurn
+				player: this[gameState_].currentTurn
 			}
 		});
 		this.world.dispatchEvent(newTurnEvent);
