@@ -4,9 +4,9 @@ import World from 'World';
 import SpriteRenderer from 'components/SpriteRenderer';
 import Transform from 'components/Transform';
 
-let _entities = new WeakMap();
-let _entitiesToDestroy = new WeakMap();
-let _world = new WeakMap();
+const entities_ = Symbol('entities');
+const entitiesToDestroy_ = Symbol('entitiesToDestroy');
+const world_ = Symbol('world');
 
 const observableEvents = [
 	'onPlaceStone',
@@ -21,9 +21,9 @@ const observableEvents = [
 
 export default class EntityManager {
 	constructor(eventDispatcher) {
-		_entities.set(this, []);
-		_entitiesToDestroy.set(this, []);
-		_world.set(this, new World(this, eventDispatcher));
+		this[entities_] = [];
+		this[entitiesToDestroy_] = [];
+		this[world_] = new World(this, eventDispatcher);
 
 		observableEvents.forEach((eventName) => {
 			eventDispatcher.addEventListener(eventName, this.dispatchEvent.bind(this));
@@ -31,36 +31,36 @@ export default class EntityManager {
 	}
 
 	add(entityBlueprint) {
-		let entity = new Entity(entityBlueprint, _world.get(this));
-		_entities.get(this).push(entity);
+		let entity = new Entity(entityBlueprint, this[world_]);
+		this[entities_].push(entity);
 		return entity;
 	}
 
 	destroy(entity) {
-		if (_entitiesToDestroy.get(this).includes(entity) === false) {
-			_entitiesToDestroy.get(this).push(entity);
+		if (this[entitiesToDestroy_].includes(entity) === false) {
+			this[entitiesToDestroy_].push(entity);
 		}
 	}
 
 	draw(view) {
 		view.clear();
-		drawEntities(view, _entities.get(this));
+		drawEntities(view, this[entities_]);
 	}
 
 	step() {
 		// TODO Consider need to destroy recursively
-		_entitiesToDestroy.get(this).forEach((entity) => {
-			let index = _entities.get(this).indexOf(entity);
-			_entities.get(this).splice(index, 1);
+		this[entitiesToDestroy_].forEach((entity) => {
+			let index = this[entities_].indexOf(entity);
+			this[entities_].splice(index, 1);
 		});
-		_entitiesToDestroy.set(this, []);
+		this[entitiesToDestroy_] = [];
 
 		let stepEvent = new CustomEvent('onStep');
 		this.dispatchEvent(stepEvent);
 	}
 
 	dispatchEvent(e) {
-		_entities.get(this).forEach((entity) => {
+		this[entities_].forEach((entity) => {
 			entity.dispatchEvent(e);
 		});
 	}
