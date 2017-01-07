@@ -3,14 +3,15 @@ import Transform from 'components/Transform';
 import SpriteRenderer from 'components/SpriteRenderer';
 
 // Private properties
-let _components = new WeakMap();
-let _behaviors = new WeakMap();
-let _children = new WeakMap();
+const components_ = Symbol('components');
+const behaviors_ = Symbol('behaviors');
+const children_ = Symbol('children');
 
 export default class Entity {
+	// TODO Consider refactor - constructor generally should not have much logic
 	constructor(config, world) {
 		let components = new WeakMap();
-		_components.set(this, components);
+		this[components_] = components;
 
 		if (config.transform !== undefined) {
 			let component = new Transform(config.transform.x, config.transform.y);
@@ -22,46 +23,46 @@ export default class Entity {
 			components.set(SpriteRenderer, component);
 		}
 
-		_behaviors.set(this, []);
+		this[behaviors_] = [];
 		if (config.behaviors !== undefined) {
 			config.behaviors.forEach((behaviorConfig) => {
 				let behavior = new behaviorConfig.component(behaviorConfig.params, this);
 				behavior.owner = this;
 				behavior.world = world;
-				_behaviors.get(this).push(behavior);
+				this[behaviors_].push(behavior);
 				components.set(behaviorConfig.component, behavior);
 			});
 		}
 
-		_children.set(this, []);
+		this[children_] = [];
 		if (config.children !== undefined) {
 			config.children.forEach((childConfig) => {
-				_children.get(this).push(new Entity(childConfig, world));
+				this[children_].push(new Entity(childConfig, world));
 			});
 		}
 	}
 
 	getComponent(componentClass) {
-		return _components.get(this).get(componentClass);
+		return this[components_].get(componentClass);
 	}
 
 	// TODO Add child should be queued for adding, instead of immediately adding
 	addChild(entity) {
-		_children.get(this).push(entity);
+		this[children_].push(entity);
 	}
 
 	get children() {
-		return _children.get(this).slice();
+		return this[children_].slice();
 	}
 
 	dispatchEvent(e) {
-		_behaviors.get(this).forEach((behavior) => {
+		this[behaviors_].forEach((behavior) => {
 			if (behavior[e.type] !== undefined) {
 				behavior[e.type](e);
 			}
 		});
 
-		_children.get(this).forEach((child) => {
+		this[children_].forEach((child) => {
 			child.dispatchEvent(e);
 		});
 	}
