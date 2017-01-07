@@ -8,22 +8,21 @@ import EntityManager from 'EntityManager';
 import boardBlueprint from 'blueprints/BoardBlueprint';
 
 // Private properties
-let _view = new WeakMap();
-let _eventDispatcher = new WeakMap();
-let _entityManager = new WeakMap();
-let _spriteFactory = new WeakMap();
+const view_ = Symbol('view');
+const eventDispatcher_ = Symbol('eventDispatcher');
+const entityManager_ = Symbol('entityManager');
+const spriteFactory_ = Symbol('spriteFactory');
 
 export default class GameEngine {
 	constructor() {
 	}
 
 	init(boardSize, documentHandle, canvasId) {
-		let eventDispatcher = documentHandle.getElementById(canvasId);
-		_eventDispatcher.set(this, eventDispatcher);
+		this[eventDispatcher_] = documentHandle.getElementById(canvasId);
 
-		_view.set(this, new CanvasView(documentHandle, canvasId));
-		_spriteFactory.set(this, new SpriteFactory(documentHandle));
-		_entityManager.set(this, new EntityManager(eventDispatcher));
+		this[view_] = new CanvasView(documentHandle, canvasId);
+		this[spriteFactory_] = new SpriteFactory(documentHandle);
+		this[entityManager_] = new EntityManager(this[eventDispatcher_]);
 
 		let spritesToLoad = [
 			sprites.gameBoard,
@@ -42,13 +41,12 @@ export default class GameEngine {
 	}
 
 	start(boardSize) {
-		let gameBoard = _entityManager.get(this).add(boardBlueprint);
-		let view = _view.get(this);
+		let gameBoard = this[entityManager_].add(boardBlueprint);
 		let boardSetupEvent = new CustomEvent('onSetup', {
 			detail: {
 				boardSize: boardSize,
-				cellSize: view.width / boardSize,
-				spriteFactory: _spriteFactory.get(this)
+				cellSize: this[view_].width / boardSize,
+				spriteFactory: this[spriteFactory_]
 			}
 		});
 		gameBoard.dispatchEvent(boardSetupEvent);
@@ -57,8 +55,8 @@ export default class GameEngine {
 	}
 
 	step() {
-		_entityManager.get(this).step();
-		_entityManager.get(this).draw(_view.get(this));
+		this[entityManager_].step();
+		this[entityManager_].draw(this[view_]);
 		requestAnimationFrame(this.step.bind(this));
 	}
 }
