@@ -1,22 +1,22 @@
 
-let _entityManager = new WeakMap();
-let _eventDispatcher = new WeakMap();
+const entityManager_ = Symbol('entityManager');
+const eventDispatcher_ = Symbol('eventDispatcher');
 
 export default class World {
 	constructor(entityManager, eventDispatcher) {
-		_entityManager.set(this, entityManager);
-		_eventDispatcher.set(this, eventDispatcher);
+		this[entityManager_] = entityManager;
+		this[eventDispatcher_] = eventDispatcher;
 	}
 
 	addEntity(entity) {
-		return _entityManager.get(this).add(entity);
+		return this[entityManager_].add(entity);
 	}
 
 	destroyEntity(entity) {
-		return _entityManager.get(this).destroy(entity);
+		return this[entityManager_].destroy(entity);
 	}
 
 	dispatchEvent(e) {
-		_eventDispatcher.get(this).dispatchEvent(e);
+		this[eventDispatcher_].dispatchEvent(e);
 	}
 }
