@@ -2,59 +2,56 @@
 import Player from 'Player';
 
 // Private properties for GameState
-let _currentTurn = new WeakMap();
-let _boardSize = new WeakMap();
-let _board = new WeakMap();
+const currentTurn_ = Symbol('currentTurn');
+const boardSize_ = Symbol('boardSize');
+const board_ = Symbol('board');
 
 // TODO Consider refactoring GameState into a behavior of an entity
 export default class GameState {
 	constructor(boardSize) {
-		_currentTurn.set(this, Player.BLACK);
-
-		_boardSize.set(this, boardSize);
-		_board.set(this, newBoard(boardSize));
+		this[currentTurn_] = Player.BLACK;
+		this[boardSize_] = boardSize;
+		this[board_] = newBoard(boardSize);
 	}
 
 	get boardSize() {
-		return _boardSize.get(this);
+		return this[boardSize_];
 	}
 
 	get currentTurn() {
-		return _currentTurn.get(this);
+		return this[currentTurn_];
 	}
 
 	// TODO Refactor so that method is smaller/simpler
 	placeStone(x, y) {
-		let board = _board.get(this);
-		let turn = _currentTurn.get(this);
-		if(hasPlayedAt(board, x, y)) {
+		if(hasPlayedAt(this[board_], x, y)) {
 			return null;
 		}
 
-		board[x][y] = turn;
+		this[board_][x][y] = this[currentTurn_];
 
 		let newTurn = Player.BLACK;
-		if (_currentTurn.get(this) === Player.BLACK) {
+		if (this[currentTurn_] === Player.BLACK) {
 			newTurn = Player.WHITE;
 		}
 
-		let adjacentEnemyChains = adjacentChains(board, x, y, newTurn);
+		let adjacentEnemyChains = adjacentChains(this[board_], x, y, newTurn);
 		let capturedChains = [];
 		adjacentEnemyChains.forEach((chain) => {
 			if (chain.liberties.length === 0) {
-				captureStones(board, chain.stones);
+				captureStones(this[board_], chain.stones);
 				capturedChains.push(chain);
 			}
 		});
 
 		let liberties = [];
-		chainAtPos(board, x, y, turn, [], liberties);
+		chainAtPos(this[board_], x, y, this[currentTurn_], [], liberties);
 		if (liberties.length === 0) {
-			board[x][y] = undefined;
+			this[board_][x][y] = undefined;
 			return null;
 		}
 
-		_currentTurn.set(this, newTurn);
+		this[currentTurn_] = newTurn;
 
 		return capturedChains;
 	}
