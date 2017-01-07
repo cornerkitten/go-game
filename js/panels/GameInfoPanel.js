@@ -2,38 +2,36 @@
 
 import Player from 'Player';
 
-let _panelElement = new WeakMap();
-let _gameElement = new WeakMap();
-let _captures = new WeakMap();
+let panelElement_ = Symbol('panelElement');
+let gameElement_ = Symbol('gameElement');
+let captures_ = Symbol('captures');
 
 export default class GameInfoPanel {
 	constructor(panelElement, gameElement) {
-		_panelElement.set(this, panelElement);
-		_gameElement.set(this, gameElement);
+		this[panelElement_] = panelElement;
+		this[gameElement_] = gameElement;
 
 		let captures = [];
 		captures[Player.BLACK] = 0;
 		captures[Player.WHITE] = 0;
-		_captures.set(this, captures);
+		this[captures_] = captures;
 	}
 
 	init() {
-		_gameElement.get(this).addEventListener('onNewTurn', this.onPlayerChange.bind(this));
-		_gameElement.get(this).addEventListener('onCaptureStone', this.onCaptureStone.bind(this));
-		setCurrentPlayer(_panelElement.get(this), Player.BLACK);
-		updateCapturedStones(_panelElement.get(this), Player.BLACK, 0);
-		updateCapturedStones(_panelElement.get(this), Player.WHITE, 0);
+		this[gameElement_].addEventListener('onNewTurn', this.onPlayerChange.bind(this));
+		this[gameElement_].addEventListener('onCaptureStone', this.onCaptureStone.bind(this));
+		setCurrentPlayer(this[panelElement_], Player.BLACK);
+		updateCapturedStones(this[panelElement_], Player.BLACK, 0);
+		updateCapturedStones(this[panelElement_], Player.WHITE, 0);
 	}
 
 	onPlayerChange(e) {
-		setCurrentPlayer(_panelElement.get(this), e.detail.player);
+		setCurrentPlayer(this[panelElement_], e.detail.player);
 	}
 
 	onCaptureStone(e) {
-		let captures = _captures.get(this)[e.detail.captor];
-		captures++;
-		_captures.get(this)[e.detail.captor] = captures;
-		updateCapturedStones(_panelElement.get(this), e.detail.captor, captures);
+		this[captures_][e.detail.captor] += 1;
+		updateCapturedStones(this[panelElement_], e.detail.captor, this[captures_][e.detail.captor]);
 	}
 }
 
