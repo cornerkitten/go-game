@@ -1,52 +1,52 @@
 
-let _sourceFile = new WeakMap();
-let _isLoaded = new WeakMap();
-let _buffer = new WeakMap();
+const sourceFile_ = Symbol('sourceFile');
+const isLoaded_ = Symbol('isLoaded');
+const buffer_ = Symbol('buffer');
 
 export default class Sprite {
 	/**
 	 * `sourceFile` is optional
 	 */
 	constructor(buffer, sourceFile) {
-		_sourceFile.set(this, sourceFile);
-		_buffer.set(this, buffer);
-		_isLoaded.set(this, (sourceFile === undefined));
+		this[sourceFile_] = sourceFile;
+		this[buffer_] = buffer;
+		this[isLoaded_] = (sourceFile === undefined);
 	}
 
 	load(callback) {
-		if (_isLoaded.get(this) === true) {
+		if (this[isLoaded_] === true) {
 			callback();
 			return;
 		}
 
-		if (_sourceFile.get(this) !== undefined) {
+		if (this[sourceFile_] !== undefined) {
 			let image = new Image();
 			image.onload = () => {
-				drawImageToBuffer(_buffer.get(this), image);
+				drawImageToBuffer(this[buffer_], image);
 
-				_isLoaded.set(this, true);
+				this[isLoaded_] = true;
 				callback();
 			};
 
 			// Setting src performs image loading
-			image.src = _sourceFile.get(this);
+			image.src = this[sourceFile_];
 		}
 	}
 
 	get buffer() {
-		return _buffer.get(this);
+		return this[buffer_];
 	}
 
 	set buffer(newBuffer) {
-		_buffer.set(this, newBuffer);
+		this[buffer_] = newBuffer;
 	}
 
 	get width() {
-		return _buffer.get(this).width;
+		return this[buffer_].width;
 	}
 
 	get height() {
-		return _buffer.get(this).height;
+		return this[buffer_].height;
 	}
 }
 
