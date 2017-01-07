@@ -1,15 +1,15 @@
 
 // Private properties for CanvasView
-let _ctx = new WeakMap();
-let _canvas = new WeakMap();
+const ctx_ = Symbol('ctx');
+const canvas_ = Symbol('canvas');
 
 export default class CanvasView {
 	// TODO Consider whether constructor should only have a single parameter
 	//      passed (i.e. canvas), so that there is no dependency on document
 	constructor(documentHandle, canvasId) {
 		let canvas = documentHandle.getElementById(canvasId);
-		_canvas.set(this, canvas);
-		_ctx.set(this, canvas.getContext('2d'));
+		this[canvas_] = canvas;
+		this[ctx_] = canvas.getContext('2d');
 
 		// TODO Consider whether it's good to assume that
 		//      defaultView is non-null
@@ -22,7 +22,7 @@ export default class CanvasView {
 		}
 
 		let canvas = spriteRenderer.sprite.buffer;
-		let ctx = _ctx.get(this);
+		let ctx = this[ctx_];
 
 		ctx.save();
 		ctx.globalAlpha = spriteRenderer.alpha;
@@ -37,16 +37,15 @@ export default class CanvasView {
 	}
 
 	clear() {
-		let canvas = _canvas.get(this);
-		_ctx.get(this).clearRect(0, 0, canvas.width, canvas.height);
+		this[ctx_].clearRect(0, 0, this[canvas_].width, this[canvas_].height);
 	}
 
 	get width() {
-		return _canvas.get(this).width;
+		return this[canvas_].width;
 	}
 
 	get height() {
-		return _canvas.get(this).height;
+		return this[canvas_].height;
 	}
 }
 
