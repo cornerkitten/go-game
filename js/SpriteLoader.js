@@ -1,21 +1,21 @@
 
-let _loadedSprites = new WeakMap();
-let _sprites = new WeakMap();
+const loadedSprites_ = Symbol('loadedSprites');
+const sprites_ = Symbol('sprites');
 
 export default class SpriteLoader {
 	constructor(sprites) {
-		_sprites.set(this, sprites);
-		_loadedSprites.set(this, 0);
+		this[sprites_] = sprites;
+		this[loadedSprites_] = 0;
 	}
 
 	load(callback) {
-		let totalSprites = _sprites.get(this).length;
+		let totalSprites = this[sprites_].length;
 
-		_sprites.get(this).forEach((sprite) => {
+		this[sprites_].forEach((sprite) => {
 			sprite.load(() => {
-				_loadedSprites.set(this, _loadedSprites.get(this) + 1);
+				this[loadedSprites_]++;
 
-				if (_loadedSprites.get(this) == totalSprites) {
+				if (this[loadedSprites_] === totalSprites) {
 					callback();
 				}
 			});
