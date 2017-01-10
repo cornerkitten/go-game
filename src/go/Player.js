@@ -1,9 +1,8 @@
 
-let player = {
-	BLACK: Symbol('black'),
-	WHITE: Symbol('white')
+const player = {
+  BLACK: Symbol('black'),
+  WHITE: Symbol('white'),
 };
 Object.freeze(player);
 
-export {player as default};
-// export default function(){}
+export { player as default };

@@ -19,19 +19,19 @@
 <script>
 /* global document */
 
-// import GameEngine from './go/GameEngine';
-// import GameInfoPanel from '../go/panels/GameInfoPanel';
+import GameEngine from './go/GameEngine';
+import GameInfoPanel from './go/panels/GameInfoPanel';
 
 export default {
   name: 'app',
   mounted() {
-    // let gameEngine = new GameEngine();
-    // gameEngine.init(9, document, 'game');
-    //
-    // let gameInfoElement = document.getElementById('game-info');
-    // let gameElement = document.getElementById('game');
-    // let gameInfoPanel = new GameInfoPanel(gameInfoElement, gameElement);
-    // gameInfoPanel.init();
+    const gameEngine = new GameEngine();
+    gameEngine.init(9, document, 'game');
+
+    const gameInfoElement = document.getElementById('game-info');
+    const gameElement = document.getElementById('game');
+    const gameInfoPanel = new GameInfoPanel(gameInfoElement, gameElement);
+    gameInfoPanel.init();
   },
 };
 </script>
