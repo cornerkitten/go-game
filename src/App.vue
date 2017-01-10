@@ -22,8 +22,6 @@
 // import GameEngine from './go/GameEngine';
 // import GameInfoPanel from '../go/panels/GameInfoPanel';
 
-import Hello from './components/Hello';
-
 export default {
   name: 'app',
   mounted() {
