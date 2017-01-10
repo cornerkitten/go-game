@@ -106,7 +106,7 @@ body {
     }
 
     .player-name:before {
-        -webkit-text-stroke: 0.4rem white;
+        -webkit-text-stroke: 0.25rem white;
     }
 
     .captured-stones {
@@ -125,7 +125,7 @@ body {
     }
 
     .player-name:before {
-        -webkit-text-stroke: 0.4rem black;
+        -webkit-text-stroke: 0.25rem black;
     }
 
     .captured-stones {
