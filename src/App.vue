@@ -13,6 +13,9 @@
       <div id="primary-surface">
           <canvas id="game"></canvas>
       </div>
+      <div id="prototype-container">
+          <canvas id="go-board" ref="goBoard"></canvas>
+      </div>
   </div>
 </template>
 
@@ -21,6 +24,7 @@
 
 import GameEngine from './go/GameEngine';
 import GameInfoPanel from './go/panels/GameInfoPanel';
+import Engine from './go/core/Engine';
 
 export default {
   name: 'app',
@@ -32,6 +36,9 @@ export default {
     const gameElement = document.getElementById('game');
     const gameInfoPanel = new GameInfoPanel(gameInfoElement, gameElement);
     gameInfoPanel.init();
+
+    const engine = new Engine();
+    engine.init(this.$refs.goBoard);
   },
 };
 </script>
@@ -138,4 +145,13 @@ body {
     color: hsla(0, 0%, 0%, 0.5);
     font-weight: normal;
 }
+
+#prototype-container {
+  text-align: center;
+}
+
+#go-board {
+  border: 1px solid #eee;
+}
+
 </style>
