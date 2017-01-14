@@ -6,10 +6,13 @@
 /* global requestAnimationFrame */
 
 import * as Pixi from 'pixi.js';
+import World from '../core/World';
 import textures from '../resources/textures';
 
 const stage_ = Symbol('stage');
 const renderer_ = Symbol('renderer');
+const initialScene_ = Symbol('initialScene');
+const world_ = Symbol('world');
 
 function loadTextures(callback) {
   const textureFiles = Object.keys(textures).map(key => textures[key]);
@@ -22,11 +25,14 @@ export default class Engine {
   constructor() {
     this[stage_] = new Pixi.Container();
     this[renderer_] = undefined;
+    this[world_] = undefined;
+    this[initialScene_] = undefined;
   }
 
   // TODO Remove default width and height
   // TODO Ensure width and height is dynamically calculated based on viewport
-  init(view, width = 800, height = 600) {
+  init(view, initialScene, width = 800, height = 600) {
+    this[initialScene_] = initialScene;
     this[renderer_] = Pixi.autoDetectRenderer(width, height, {
       view,
       transparent: true,
@@ -36,12 +42,16 @@ export default class Engine {
   }
 
   onLoad() {
-    const stone = Pixi.Sprite.from(textures.BLACK_STONE);
-    this[stage_].addChild(stone);
+    this[world_] = new World(this[stage_]);
+    this[world_].initScene(this[initialScene_]);
+
     requestAnimationFrame(this.update.bind(this));
   }
 
   update() {
+    // TODO Evaluate needs for update()
+    // this[world_].update();
+
     this[renderer_].render(this[stage_]);
 
     requestAnimationFrame(this.update.bind(this));

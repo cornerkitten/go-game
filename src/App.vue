@@ -25,6 +25,7 @@
 import GameEngine from './go/GameEngine';
 import GameInfoPanel from './go/panels/GameInfoPanel';
 import Engine from './go/core/Engine';
+import scenes from './go/resources/scenes';
 
 export default {
   name: 'app',
@@ -38,7 +39,7 @@ export default {
     gameInfoPanel.init();
 
     const engine = new Engine();
-    engine.init(this.$refs.goBoard);
+    engine.init(this.$refs.goBoard, scenes.BASIC);
   },
 };
 </script>
