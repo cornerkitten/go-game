@@ -7,7 +7,7 @@
 
 import * as Pixi from 'pixi.js';
 import World from '../core/World';
-import textures from '../resources/textures';
+import { TEXTURE } from '../resources';
 
 const stage_ = Symbol('stage');
 const renderer_ = Symbol('renderer');
@@ -15,7 +15,7 @@ const initialScene_ = Symbol('initialScene');
 const world_ = Symbol('world');
 
 function loadTextures(callback) {
-  const textureFiles = Object.keys(textures).map(key => textures[key]);
+  const textureFiles = Object.keys(TEXTURE).map(key => TEXTURE[key]);
   textureFiles.forEach(file => Pixi.loader.add(file));
   Pixi.loader.once('complete', callback);
   Pixi.loader.load();
