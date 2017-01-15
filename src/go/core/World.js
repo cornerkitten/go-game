@@ -18,6 +18,8 @@ function createDisplay(config) {
   switch (type) {
     case DISPLAY_TYPE.SPRITE:
       display = Pixi.Sprite.from(config.texture);
+      display.anchor.x = config.anchor.x || 0;
+      display.anchor.y = config.anchor.y || 0;
       break;
     case DISPLAY_TYPE.CONTAINER:
       display = new Pixi.Container();
@@ -44,7 +46,7 @@ function createBehaviorParam(param) {
   }
 }
 
-// TODO Protected the passed in services
+// TODO Protect the passed in services
 function createBehavior(config, services) {
   const params = {};
 
