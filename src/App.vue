@@ -39,7 +39,7 @@ export default {
     gameInfoPanel.init();
 
     const engine = new Engine();
-    engine.init(this.$refs.goBoard, SCENE.BASIC);
+    engine.init(this.$refs.goBoard, SCENE.PREVIEW);
   },
 };
 </script>

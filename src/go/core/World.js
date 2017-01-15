@@ -1,10 +1,70 @@
 
+/* eslint no-debugger: "off" */
+
 import * as Pixi from 'pixi.js';
-import { DISPLAY_TYPE } from '../core/constants';
-import { SCENE } from '../resources';
+import { COMPONENT, DISPLAY_TYPE } from '../core/constants';
+import { SCENE, BEHAVIOR } from '../resources';
 import stonePrefab from '../prefabs/stone';
+import previewStonePrefab from '../prefabs/previewStone';
+// TODO Remove as depenency
+import PreviewStone from '../behaviors/PreviewStone';
 
 const stage_ = Symbol('stage');
+
+function createDisplay(config) {
+  const type = config.type || DISPLAY_TYPE.CONTAINER;
+  let display;
+
+  switch (type) {
+    case DISPLAY_TYPE.SPRITE:
+      display = Pixi.Sprite.from(config.texture);
+      break;
+    case DISPLAY_TYPE.CONTAINER:
+      display = new Pixi.Container();
+      break;
+    default:
+      break;
+  }
+  display.alpha = config.alpha || 1;
+
+  return display;
+}
+
+function createBehaviorParam(param) {
+  if (param.component === undefined) {
+    return param;
+  }
+
+  switch (param.component) {
+    case COMPONENT.DISPLAY:
+      return createDisplay(param);
+    default:
+      // TODO Throw exception
+      return null;
+  }
+}
+
+// TODO Protected the passed in services
+function createBehavior(config, services) {
+  const params = {};
+
+  if (config.params) {
+    const paramKeys = Object.keys(config.params);
+    paramKeys.forEach((paramKey) => {
+      params[paramKey] = createBehaviorParam(config.params[paramKey]);
+    });
+  }
+
+  // TODO Generalize process
+  switch (config.component) {
+    case BEHAVIOR.PREVIEW_STONE:
+      return new PreviewStone(params, services);
+    default:
+      // TODO Throw exception
+      debugger;
+      return null;
+  }
+}
 
 export default class World {
   constructor(stage) {
@@ -17,33 +77,40 @@ export default class World {
         this.createEntity(stonePrefab);
         break;
       }
+      case SCENE.PREVIEW: {
+        this.createEntity(previewStonePrefab);
+        break;
+      }
       default:
         break;
     }
   }
 
   createEntity(config) {
-    if (config.display) {
-      this.createDisplay(config.display);
-    }
-  }
-
-  createDisplay(config) {
-    const type = config.type || DISPLAY_TYPE.CONTAINER;
+    // TODO If no display component is described,
+    //      create container by default
     let display;
-
-    switch (type) {
-      case DISPLAY_TYPE.SPRITE:
-        display = Pixi.Sprite.from(config.texture);
-        break;
-      case DISPLAY_TYPE.CONTAINER:
-        display = new Pixi.Container();
-        break;
-      default:
-        break;
+    if (config.display) {
+      display = createDisplay(config.display);
+      this[stage_].addChild(display);
     }
 
-    this[stage_].addChild(display);
+    const services = {
+      component: (componentId) => {
+        switch (componentId) {
+          case COMPONENT.DISPLAY:
+            return display;
+          default:
+            return null;
+        }
+      },
+    };
+
+    if (config.behaviors) {
+      for (let i = 0; i < config.behaviors.length; i += 1) {
+        createBehavior(config.behaviors[i], services);
+      }
+    }
   }
 
   // TODO Evaluate needs for update()

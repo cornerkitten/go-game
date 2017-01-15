@@ -7,3 +7,7 @@ export const TEXTURE = {
 export const SCENE = {
   BASIC: 'basic',
 };
+
+export const BEHAVIOR = {
+  PREVIEW_STONE: 'PreviewStone',
+};
